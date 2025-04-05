@@ -1,25 +1,25 @@
 from pkg.platform.types import MessageChain
 from pkg.plugin.context import register, handler, llm_func, BasePlugin, APIHost, EventContext
 from pkg.plugin.events import *
-from plugins.ehentai_downloader.utils.message_adapter import FileUploader
-from plugins.ehentai_downloader.config import load_config
-from plugins.ehentai_downloader.utils.helpers import (
+from plugins.ehentai_bot.utils.message_adapter import FileUploader
+from plugins.ehentai_bot.config import load_config
+from plugins.ehentai_bot.utils.helpers import (
     parse_background_position,
     calculate_rating,
     extract_author_and_title,
     build_search_url,
     get_safe_filename
 )
-from plugins.ehentai_downloader.scraper.parser import (
+from plugins.ehentai_bot.scraper.parser import (
     parse_gallery_from_html,
     get_next_page_url,
     extract_image_url_from_page,
     extract_gallery_info,
     extract_subpage_urls
 )
-from plugins.ehentai_downloader.downloader.async_downloader import AsyncDownloader
-from plugins.ehentai_downloader.pdf_generator.generator import PDFGenerator
-from plugins.ehentai_downloader.ui.interface import UserInterface
+from plugins.ehentai_bot.downloader.async_downloader import AsyncDownloader
+from plugins.ehentai_bot.pdf_generator.generator import PDFGenerator
+from plugins.ehentai_bot.ui.interface import UserInterface
 from pathlib import Path
 import re
 
