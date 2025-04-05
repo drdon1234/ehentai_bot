@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 from natsort import natsorted
 from asyncio import Queue
-
+from itertools import count
 
 class FileUploader:
     def __init__(self, config_path):
@@ -109,7 +109,7 @@ class FileUploader:
             return "/"
         return folder_id
 
-    async def upload_file(self, ctx, path, name, folder_name='/'):
+    async def upload_file(self, ctx, path, name, safe_name, folder_name='/'):
         """上传文件"""
         all_files = os.listdir(path)
         pattern = re.compile(rf"^{re.escape(name)}(?: part \d+)?\.pdf$")
@@ -136,17 +136,22 @@ class FileUploader:
             base_payload["folder_id"] = await self.get_group_folder_id(target_id, folder_name)
     
         queue = Queue()
-    
+        counter = count(1)
+        
         async def worker():
             async with aiohttp.ClientSession() as session:
                 while not queue.empty():
                     file = await queue.get()
+                    
+                    sequence_number = next(counter)
+                    safe_name_with_counter = f"{safe_name}_{sequence_number}"
+                    
                     payload = base_payload.copy()
                     payload.update({
                         "file": file,
-                        "name": os.path.basename(file)
+                        "name": safe_name_with_counter
                     })
-    
+        
                     result = await self._upload_single_file(session, url, self.get_headers(), payload)
                     results.append(result)
                     queue.task_done()
