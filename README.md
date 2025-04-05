@@ -1,11 +1,12 @@
 # 适配langbot的ehentai转pdf插件 #
 
-安装方法
+安装方法  
 [1] langbot配置完毕后使用管理员账号对bot发送以下指令
 ```
 !plugin get https://github.com/exneverbur/ShowMeJM
 ```
-[2] "langbot webui" -> "插件" -> "+ 安装" -> 输入"https://github.com/drdon1234/ehentai_bot" -> "安装"
+[2]  
+```"langbot webui" -> "插件" -> "+ 安装" -> 输入"https://github.com/drdon1234/ehentai_bot" -> "安装"```
 
 
 使用说明
