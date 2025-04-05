@@ -14,6 +14,6 @@ request:
 
 output:
   image_folder: "./downloads/tempImages"
-  pdf_folder: "./downloads/pdfs"
+  pdf_folder: "/app/sharedFolder/ehentai"
   jpeg_quality: 85
   max_pages_per_pdf: 200
