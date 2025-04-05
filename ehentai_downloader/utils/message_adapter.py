@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 from natsort import natsorted
 from asyncio import Queue
-from itertools import count
+
 
 class FileUploader:
     def __init__(self, config_path):
@@ -109,7 +109,7 @@ class FileUploader:
             return "/"
         return folder_id
 
-    async def upload_file(self, ctx, path, name, safe_name, folder_name='/'):
+    async def upload_file(self, ctx, path, name, folder_name='/'):
         """上传文件"""
         all_files = os.listdir(path)
         pattern = re.compile(rf"^{re.escape(name)}(?: part \d+)?\.pdf$")
@@ -122,7 +122,7 @@ class FileUploader:
             raise FileNotFoundError("未找到符合命名的文件")
     
         is_private = ctx.event.launcher_type == "person"
-        target_id = ctx.event.sender_id
+        target_id = ctx.event.sender_id if is_private else ctx.event.launcher_id
         url_type = "upload_private_file" if is_private else "upload_group_file"
         url = f"http://{self.http_host}:{self.http_port}/{url_type}"
     
@@ -136,25 +136,20 @@ class FileUploader:
             base_payload["folder_id"] = await self.get_group_folder_id(target_id, folder_name)
     
         queue = Queue()
-        counter = count(1)
         
         async def worker():
             async with aiohttp.ClientSession() as session:
                 while not queue.empty():
                     file = await queue.get()
-                    
-                    sequence_number = next(counter)
-                    safe_name_with_counter = f"{safe_name}_part_{sequence_number}.pdf"
-                    
                     payload = base_payload.copy()
                     payload.update({
                         "file": file,
-                        "name": safe_name_with_counter
+                        "name": safe_name
                     })
-        
-                    result = await self._upload_single_file(session, url, self.get_headers(), payload)
-                    results.append(result)
-                    queue.task_done()
+                
+                result = await self._upload_single_file(session, url, self.get_headers(), payload)
+                results.append(result)
+                queue.task_done()
     
         for file in files:
             await queue.put(file)
