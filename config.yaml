@@ -1,0 +1,19 @@
+platform:
+  type: "napcat"
+  http_host: "127.0.0.1"
+  http_port: 2333
+  api_token: "your_token_here"
+
+request:
+  headers:
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+  proxies: "http://127.0.0.1:7897"
+  concurrency: 5
+  max_retries: 10
+  timeout: 30
+
+output:
+  image_folder: "./downloads/tempImages"
+  pdf_folder: "./downloads/pdfs"
+  jpeg_quality: 85
+  max_pages_per_pdf: 200
