@@ -18,7 +18,8 @@ class PDFGenerator:
             print("没有可用的图片文件")
             return
 
-        safe_title = self.helpers.get_safe_filename(gallery_title)
+        # safe_title = self.helpers.get_safe_filename(gallery_title)
+        safe_title = gallery_title
         pdf_dir = Path(self.config['output']['pdf_folder'])
         max_pages = self.config['output']['max_pages_per_pdf']
 
@@ -35,9 +36,10 @@ class PDFGenerator:
                 print(f"生成PDF: {output_path.name}")
         else:
             output_path = pdf_dir / f"{safe_title}.pdf"
+
             with open(output_path, "wb") as f:
                 f.write(img2pdf.convert(image_files))
 
             print(f"生成PDF: {output_path.name}")
-            
+
         return safe_title
