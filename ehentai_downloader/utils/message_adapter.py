@@ -116,40 +116,48 @@ class FileUploader:
             os.path.join(path, f) for f in all_files if pattern.match(f)
         ]
         files = natsorted(matching_files)
-
+    
         if not files:
             raise FileNotFoundError("未找到符合命名的文件")
-
+    
         is_private = ctx.event.launcher_type == "person"
         target_id = ctx.event.sender_id
         url_type = "upload_private_file" if is_private else "upload_group_file"
         url = f"http://{self.http_host}:{self.http_port}/{url_type}"
-
+    
         base_payload = {
             "file": None,
             "name": None,
             "user_id" if is_private else "group_id": target_id
         }
-
+    
         if not is_private:
             base_payload["folder_id"] = await self.get_group_folder_id(target_id, folder_name)
-
-        tasks = []
-
-        async with aiohttp.ClientSession() as session:
-            for file in files:
-                payload = base_payload.copy()
-                payload.update({
-                    "file": file,
-                    "name": os.path.basename(file)
-                })
-
-                tasks.append(
-                    self._upload_single_file(session, url, self.get_headers(), payload)
-                )
-
-            results = await asyncio.gather(*tasks, return_exceptions=True)
-            return self._process_results(results)
+    
+        queue = Queue()
+    
+        async def worker():
+            async with aiohttp.ClientSession() as session:
+                while not queue.empty():
+                    file = await queue.get()
+                    payload = base_payload.copy()
+                    payload.update({
+                        "file": file,
+                        "name": os.path.basename(file)
+                    })
+    
+                    result = await self._upload_single_file(session, url, self.get_headers(), payload)
+                    results.append(result)
+                    queue.task_done()
+    
+        for file in files:
+            await queue.put(file)
+    
+        results = []
+        workers = [worker() for _ in range(1)]
+        await asyncio.gather(*workers)
+    
+        return self._process_results(results)
 
     async def _upload_single_file(self, session, url, headers, payload):
         try:
