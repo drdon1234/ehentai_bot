@@ -7,7 +7,7 @@ platform:
 request:
   headers:
     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，非docker部署clash一般为http://127.0.0.1:port，docker部署clash一般为http://{宿主机局域网ip}:port
+  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，代理软件位于宿主机时，非docker部署一般为http://127.0.0.1:port，docker部署一般为http://{宿主机局域网ip}:port
   concurrency: 5 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
   max_retries: 3 # 请求重试次数
   timeout: 10 # 超时时间
