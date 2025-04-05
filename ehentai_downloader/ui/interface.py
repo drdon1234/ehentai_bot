@@ -14,7 +14,7 @@ class UserInterface:
             output += f" 封面: {result['cover_url']}\n"
             output += f" 画廊链接: {result['gallery_url']}\n"
             output += "-" * 80 + "\n"
-
+        print(output)
         return output
 
     @staticmethod
