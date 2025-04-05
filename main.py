@@ -167,4 +167,5 @@ class MyPlugin(BasePlugin):
         [2] 搜eh [关键词] [最低评分] [最少页数]
         [3] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]
         """
+        await ctx.reply(MessageChain([str]))
 
