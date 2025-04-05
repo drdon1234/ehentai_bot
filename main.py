@@ -101,6 +101,8 @@ class MyPlugin(BasePlugin):
             await self.search_gallery(ctx, cleaned_text)
         elif cleaned_text.startswith('看eh'):
             await self.download_gallery(ctx, cleaned_text)
+        elif cleaned_text.startswith('eh'):
+            await self.eh_helper(ctx)
         else:
             prevent_default = False
         if prevent_default:
@@ -119,7 +121,7 @@ class MyPlugin(BasePlugin):
         args = self.parse_command(cleaned_text)
         args_num = len(args)
         if args_num == 0:
-            await ctx.reply(MessageChain(["搜索参数不正确，请重试..."]))
+            await self.eh_helper(ctx)
             ctx.prevent_default()
         elif args_num >= 1:
             tags = re.sub(r'[，,]+', ' ', args[0])
@@ -131,6 +133,9 @@ class MyPlugin(BasePlugin):
                 min_pages = args[2]
             elif args_num == 4:
                 target_page = args[3]
+            else:
+                await self.eh_helper(ctx)
+                ctx.prevent_default()
             search_results = await self.downloader.crawl_ehentai(tags, min_rating, min_pages, target_page)
             results_ui = self.ui.get_search_results(search_results)
             await ctx.reply(MessageChain([results_ui]))
@@ -139,7 +144,7 @@ class MyPlugin(BasePlugin):
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         args = self.parse_command(cleaned_text)
         if len(args) != 1:
-            await ctx.reply(MessageChain(["搜索参数不正确，请重试..."]))
+            await self.eh_helper(ctx)
             ctx.prevent_default()
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
@@ -148,3 +153,18 @@ class MyPlugin(BasePlugin):
             safe_title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
             await ctx.reply(MessageChain([f"发送 {safe_title} 中，请稍候..."]))
             await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], safe_title)
+
+    # 指令帮助
+    async def eh_helper(self, ctx: EventContext):
+        str = """
+        eh指令帮助：
+        [1] 搜eh [关键词] [最低评分（2-5，默认2）] [最少页数（默认1）] [获取第几页的画廊列表（默认1）]: 搜索画廊
+        [2] 看eh [画廊链接]: 下载画廊
+        [3] eh: 获取指令帮助
+        
+        可用的搜索方式为:
+        [1] 搜eh [关键词]
+        [2] 搜eh [关键词] [最低评分] [最少页数]
+        [3] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]
+        """
+
