@@ -1,13 +1,13 @@
 platform:
   type: "napcat"
-  http_host: "127.0.0.1"
-  http_port: 2333
+  http_host: "192.168.5.2"
+  http_port: 13000
   api_token: "your_token_here"
 
 request:
   headers:
     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-  proxies: "http://127.0.0.1:7897"
+  proxies: "http://192.168.5.2:17893"
   concurrency: 5
   max_retries: 10
   timeout: 30
