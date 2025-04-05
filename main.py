@@ -124,7 +124,7 @@ class MyPlugin(BasePlugin):
             await self.eh_helper(ctx)
             ctx.prevent_default()
         elif args_num >= 1:
-            tags = re.sub(r'[，,]+', ' ', args[0])
+            tags = re.sub(r'[，,+]+', ' ', args[0])
             min_rating = 2
             min_pages = 1
             target_page = 1
