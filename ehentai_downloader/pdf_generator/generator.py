@@ -35,10 +35,10 @@ class PDFGenerator:
                 print(f"生成PDF: {output_path.name}")
         else:
             output_path = pdf_dir / f"{safe_title}.pdf"
-
+            print(output_path)
             with open(output_path, "wb") as f:
                 f.write(img2pdf.convert(image_files))
 
             print(f"生成PDF: {output_path.name}")
-            
+        print(safe_title)
         return safe_title
