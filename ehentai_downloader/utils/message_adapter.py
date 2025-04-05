@@ -144,7 +144,7 @@ class FileUploader:
                     payload = base_payload.copy()
                     payload.update({
                         "file": file,
-                        "name": safe_name
+                        "name": os.path.basename(file)
                     })
                 
                 result = await self._upload_single_file(session, url, self.get_headers(), payload)
