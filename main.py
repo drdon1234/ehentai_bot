@@ -22,7 +22,7 @@ from plugins.ehentai_bot.ehentai_downloader.pdf_generator.generator import PDFGe
 from plugins.ehentai_bot.ehentai_downloader.ui.interface import UserInterface
 from pathlib import Path
 import re
-
+import aiohttp
 
 class Helpers:
     """帮助类，包含所有工具函数"""
@@ -137,6 +137,14 @@ class MyPlugin(BasePlugin):
 
     # 下载画廊合并为pdf文件发送
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
-        ctx.prevent_default()
-        # args = self.parse_command(cleaned_text)
-        # await self.uploader.upload_file(ctx, "/app/sharedFolder", "test.pdf")
+        args = self.parse_command(cleaned_text)
+        if len(args) != 1:
+            await ctx.reply(MessageChain(["搜索参数不正确，请重试..."]))
+            ctx.prevent_default()
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+            await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
+            await self.downloader.process_pagination(session, args[0])
+            await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
+            await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
+            await ctx.reply(MessageChain(["发送中，请稍候..."]))
+            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], self.downloader.gallery_title)
