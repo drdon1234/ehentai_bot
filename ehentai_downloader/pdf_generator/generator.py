@@ -22,7 +22,7 @@ class PDFGenerator:
         pdf_dir = Path(self.config['output']['pdf_folder'])
         max_pages = self.config['output']['max_pages_per_pdf']
 
-        if max_pages > 0 and len(image_files) > max_pages:
+        if 0 < max_pages < len(image_files):
             total = math.ceil(len(image_files) / max_pages)
 
             for i in range(total):
@@ -40,3 +40,5 @@ class PDFGenerator:
                 f.write(img2pdf.convert(image_files))
 
             print(f"生成PDF: {output_path.name}")
+            
+        return safe_title
