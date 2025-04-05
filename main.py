@@ -151,7 +151,7 @@ class MyPlugin(BasePlugin):
             await self.downloader.process_pagination(session, args[0])
             await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
             source_title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
-            match = re.search(r'g/(\d+)/(\w+)/', url)
+            match = re.search(r'g/(\d+)/(\w+)/', args[0])
             safe_title = "placeholder"
             if match:
                 safe_title = f"{match.group(1)}_{match.group(2)}"
