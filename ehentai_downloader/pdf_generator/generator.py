@@ -10,7 +10,7 @@ class PDFGenerator:
         self.config = config
         self.helpers = helpers
 
-    def merge_images_to_pdf(self, gallery_title):
+    async def merge_images_to_pdf(self, gallery_title):
         """合并图片为PDF文件"""
         image_files = natsorted(glob.glob(str(Path(self.config['output']['image_folder']) / "*.jpg")))
 
