@@ -110,13 +110,10 @@ class FileUploader:
 
     async def upload_file(self, ctx, path, name, folder_name='/'):
         """上传文件"""
-        # 清洗文件名后缀，移除扩展名
-        base_name = os.path.splitext(name)[0]  # 剥离后缀
-        # sanitized_name = re.sub(r'[^\w\-_]', '_', base_name)  # 特殊字符过滤
-
-        # 使用 glob 的通配符模式进行匹配
-        pattern = os.path.join(path, f"{base_name}*.pdf")  # 匹配所有相关文件
-        files = natsorted(glob.glob(pattern))  # 自然排序
+        pattern_no_part = os.path.join(pdf_dir, f"{safe_title}.pdf")
+        pattern_with_part = os.path.join(pdf_dir, f"{safe_title} part *.pdf")
+        matching_files = glob.glob(pattern_no_part) + glob.glob(pattern_with_part)
+        files = natsorted(matching_files)
 
         if not files:
             raise FileNotFoundError(f"未找到符合: {pattern} 命名的文件")
