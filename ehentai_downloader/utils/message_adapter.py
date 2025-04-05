@@ -144,7 +144,7 @@ class FileUploader:
                     file = await queue.get()
                     
                     sequence_number = next(counter)
-                    safe_name_with_counter = f"{safe_name}_{sequence_number}"
+                    safe_name_with_counter = f"{safe_name}_part_{sequence_number}.pdf"
                     
                     payload = base_payload.copy()
                     payload.update({
