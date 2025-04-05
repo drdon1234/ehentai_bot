@@ -110,13 +110,15 @@ class FileUploader:
 
     async def upload_file(self, ctx, path, name, folder_name='/'):
         """上传文件"""
-        pattern_no_part = os.path.join(path, f"{name}.pdf")
-        pattern_with_part = os.path.join(path, f"{name} part *.pdf")
-        matching_files = glob.glob(pattern_no_part) + glob.glob(pattern_with_part)
+        all_files = os.listdir(path)
+        pattern = re.compile(rf"^{re.escape(name)}(?: part \d+)?\.pdf$")
+        matching_files = [
+            os.path.join(path, f) for f in all_files if pattern.match(f)
+        ]
         files = natsorted(matching_files)
 
         if not files:
-            raise FileNotFoundError(f"未找到符合: {pattern_no_part} 或 {pattern_with_part} 命名的文件")
+            raise FileNotFoundError("未找到符合命名的文件")
 
         is_private = ctx.event.launcher_type == "person"
         target_id = ctx.event.sender_id
