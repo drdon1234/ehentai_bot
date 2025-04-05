@@ -2,7 +2,7 @@ platform:
   type: "napcat"
   http_host: "192.168.5.2"
   http_port: 13000
-  api_token: "your_token_here"
+  api_token: ""
 
 request:
   headers:
