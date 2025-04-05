@@ -110,8 +110,8 @@ class FileUploader:
 
     async def upload_file(self, ctx, path, name, folder_name='/'):
         """上传文件"""
-        pattern_no_part = os.path.join(pdf_dir, f"{safe_title}.pdf")
-        pattern_with_part = os.path.join(pdf_dir, f"{safe_title} part *.pdf")
+        pattern_no_part = os.path.join(path, f"{name}.pdf")
+        pattern_with_part = os.path.join(path, f"{name} part *.pdf")
         matching_files = glob.glob(pattern_no_part) + glob.glob(pattern_with_part)
         files = natsorted(matching_files)
 
