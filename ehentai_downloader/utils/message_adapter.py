@@ -116,7 +116,7 @@ class FileUploader:
         files = natsorted(matching_files)
 
         if not files:
-            raise FileNotFoundError(f"未找到符合: {pattern} 命名的文件")
+            raise FileNotFoundError(f"未找到符合: {pattern_no_part} 或 {pattern_with_part} 命名的文件")
 
         is_private = ctx.event.launcher_type == "person"
         target_id = ctx.event.sender_id
