@@ -6,7 +6,7 @@ from .helpers import (
     get_safe_filename
 )
 
-from .message_adapter import send_pdf
+from .message_adapter import FileUploader
 
 __all__ = [
     'parse_background_position',
@@ -14,5 +14,4 @@ __all__ = [
     'extract_author_and_title',
     'build_search_url',
     'get_safe_filename',
-    'send_pdf'
 ]
