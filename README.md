@@ -1,4 +1,4 @@
-# 适配 LangBot 的 EHentai 转 PDF 插件
+# 适配 LangBot 的 EHentai画廊 转 PDF 插件
 
 ## 安装方法
 
@@ -37,7 +37,7 @@ https://github.com/drdon1234/ehentai_bot
 3. 高级搜索：  
 ```搜eh [关键词] [最低评分] [最少页数]```
 
-5. 分页搜索：  
+5. 搜索指定页：  
 ```搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]```
 
 **注意：**  
