@@ -112,10 +112,10 @@ class FileUploader:
         """上传文件"""
         # 清洗文件名后缀，移除扩展名
         base_name = os.path.splitext(name)[0]  # 剥离后缀
-        sanitized_name = re.sub(r'[^\w\-_]', '_', base_name)  # 特殊字符过滤
+        # sanitized_name = re.sub(r'[^\w\-_]', '_', base_name)  # 特殊字符过滤
 
         # 使用 glob 的通配符模式进行匹配
-        pattern = os.path.join(path, f"{sanitized_name}*.pdf")  # 匹配所有相关文件
+        pattern = os.path.join(path, f"{base_name}*.pdf")  # 匹配所有相关文件
         files = natsorted(glob.glob(pattern))  # 自然排序
 
         if not files:
