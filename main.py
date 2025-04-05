@@ -148,6 +148,11 @@ class MyPlugin(BasePlugin):
             ctx.prevent_default()
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
+            pattern = re.compile(r'^https://e-hentai\.org/g/\d{7}/[a-f0-9]{10}/$')
+            if not pattern.match(url):
+                await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
+                ctx.prevent_default()
+                return
             await self.downloader.process_pagination(session, args[0])
             await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
             title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
