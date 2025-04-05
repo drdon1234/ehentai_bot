@@ -149,7 +149,7 @@ class MyPlugin(BasePlugin):
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
             pattern = re.compile(r'^https://e-hentai\.org/g/\d{7}/[a-f0-9]{10}/$')
-            if not pattern.match(url):
+            if not pattern.match(args[0]):
                 await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
                 ctx.prevent_default()
                 return
