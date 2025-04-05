@@ -53,30 +53,30 @@ https://github.com/drdon1234/ehentai_bot
 ### 平台设置
 ```
 platform:
-type: "napcat" # 消息平台，兼容 napcat, llonebot, lagrange
-http_host: "192.168.5.2" # 非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
-http_port: 13000 # 消息平台监听端口，通常为 3000 或 2333
-api_token: "" # HTTP 服务器 token，没有则不填
+  type: "napcat" # 消息平台，兼容 napcat, llonebot, lagrange
+  http_host: "192.168.5.2" # 非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
+  http_port: 13000 # 消息平台监听端口，通常为 3000 或 2333
+  api_token: "" # HTTP 服务器 token，没有则不填
 ```
 
 ### 请求设置
 ```
 request:
-headers:
-User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-proxies: "http://192.168.5.2:17893" # 墙内用户必填项，非 docker 部署 Clash 一般为 http://127.0.0.1:port，docker 部署 Clash 一般为 http://{宿主机局域网 IP}:port
-concurrency: 5 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
-max_retries: 3 # 请求重试次数
-timeout: 10 # 超时时间
+  headers:
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，非 docker 部署 Clash 一般为 http://127.0.0.1:port，docker 部署 Clash 一般为 http://{宿主机局域网 IP}:port
+  concurrency: 5 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
+  max_retries: 3 # 请求重试次数
+  timeout: 10 # 超时时间
 ```
 
 ### 输出设置
 ```
 output:
-image_folder: "/app/sharedFolder/tempImages" # 暂时存放画廊图片的文件夹路径
-pdf_folder: "/app/sharedFolder/ehentai" # 存放 PDF 文件的路径
-jpeg_quality: 85 # 图片质量，100 为不压缩，85 左右可以达到文件大小和质量的最佳平衡
-max_pages_per_pdf: 200 # 单个 PDF 文件最大页数
+  image_folder: "/app/sharedFolder/tempImages" # 暂时存放画廊图片的文件夹路径
+  pdf_folder: "/app/sharedFolder/ehentai" # 存放 PDF 文件的路径
+  jpeg_quality: 85 # 图片质量，100 为不压缩，85 左右可以达到文件大小和质量的最佳平衡
+  max_pages_per_pdf: 200 # 单个 PDF 文件最大页数
 ```
 
 ---
