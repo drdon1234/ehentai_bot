@@ -72,7 +72,7 @@ class Parser:
         return extract_subpage_urls(html_content)
 
 # 注册插件
-@register(name="test_file_sender", description="测试发送文件", version="1.0", author="drdon1234")
+@register(name="ehentai_bot", description="这是一个ehentai搜索和画廊图片转pdf插件", version="1.0", author="drdon1234")
 class MyPlugin(BasePlugin):
 
     # 插件加载时触发
