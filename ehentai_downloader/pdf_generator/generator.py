@@ -28,7 +28,7 @@ class PDFGenerator:
 
             for i in range(total):
                 batch = image_files[i * max_pages: (i + 1) * max_pages]
-                output_path = pdf_dir / f"{safe_title}_part{i + 1}.pdf"
+                output_path = pdf_dir / f"{safe_title} part {i + 1}.pdf"
 
                 with open(output_path, "wb") as f:
                     f.write(img2pdf.convert(batch))
