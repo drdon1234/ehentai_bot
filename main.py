@@ -150,9 +150,13 @@ class MyPlugin(BasePlugin):
             await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
             await self.downloader.process_pagination(session, args[0])
             await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
-            safe_title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
+            source_title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
+            match = re.search(r'g/(\d+)/(\w+)/', url)
+            safe_title = "placeholder"
+            if match:
+                safe_title = f"{match.group(1)}_{match.group(2)}"
             await ctx.reply(MessageChain([f"发送 {safe_title} 中，请稍候..."]))
-            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], safe_title)
+            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], source_title, safe_title)
 
     # 指令帮助
     async def eh_helper(self, ctx: EventContext):
