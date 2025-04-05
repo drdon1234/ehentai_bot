@@ -114,9 +114,8 @@ class MyPlugin(BasePlugin):
     def parse_command(message: str):
         return [p for p in message.split(' ') if p][1:]
 
-    # 发送本子
+    # 搜索画廊
     async def search_gallery(self, ctx: EventContext, cleaned_text: str):
-        ctx.prevent_default()
         args = self.parse_command(cleaned_text)
         args_num = len(args)
         if args_num == 0:
@@ -136,7 +135,7 @@ class MyPlugin(BasePlugin):
             results_ui = self.ui.get_search_results(search_results)
             await ctx.reply(MessageChain([results_ui]))
 
-    # 发送本子
+    # 下载画廊合并为pdf文件发送
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         ctx.prevent_default()
         # args = self.parse_command(cleaned_text)
