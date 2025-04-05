@@ -145,6 +145,6 @@ class MyPlugin(BasePlugin):
             await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
             await self.downloader.process_pagination(session, args[0])
             await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
-            await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
+            safe_title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
             await ctx.reply(MessageChain(["发送中，请稍候..."]))
-            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], self.downloader.gallery_title)
+            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], safe_title)
