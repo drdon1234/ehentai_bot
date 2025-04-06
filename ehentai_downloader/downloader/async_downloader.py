@@ -8,6 +8,7 @@ import aiohttp
 import aiofiles
 import random
 from pathlib import Path
+from natsort import natsorted
 from PIL import Image
 
 
