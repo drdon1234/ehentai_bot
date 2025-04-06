@@ -143,6 +143,12 @@ class MyPlugin(BasePlugin):
             await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
     
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
+        image_folder = Path(config['output']['image_folder'])
+        pdf_folder = Path(config['output']['pdf_folder'])
+        if not image_folder.exists():
+            image_folder.mkdir(parents=True)
+        if not pdf_folder.exists():
+            pdf_folder.mkdir(parents=True)
         try:
             args = self.parse_command(cleaned_text)
             if len(args) != 1:
