@@ -8,7 +8,7 @@ request:
   headers:
     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
   website: "e-hentai"  # 表站: e-hentai | 里站: exhentai
-  cookies:
+  cookies: # 缺少有效cookie时请不要将website设置为exhentai
     igneous: ""
     ipb_member_id: ""
     ipb_pass_hash: ""
