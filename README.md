@@ -66,7 +66,14 @@ platform:
 request:
   headers:
     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，代理软件位于宿主机时，非docker部署一般为http://127.0.0.1:port，docker部署一般为http://{宿主机局域网ip}:port
+  website: "e-hentai"  # 表站: e-hentai | 里站: exhentai
+  cookies: # 缺少有效 cookie 时请不要将 website 设置为 exhentai
+    igneous: ""
+    ipb_member_id: ""
+    ipb_pass_hash: ""
+    sk: ""
+    yay: "louder"
+  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，代理软件位于宿主机时，非 docker 部署一般为http://127.0.0.1:port，docker 部署一般为http://{宿主机局域网ip}:port
   concurrency: 5 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
   max_retries: 3 # 请求重试次数
   timeout: 10 # 超时时间
