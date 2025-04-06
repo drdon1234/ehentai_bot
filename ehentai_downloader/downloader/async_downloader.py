@@ -1,6 +1,7 @@
 from pkg.platform.types import MessageChain
 from pkg.plugin.context import register, handler, llm_func, BasePlugin, APIHost, EventContext
 from pkg.plugin.events import *
+from plugins.ehentai_bot.ehentai_downloader.utils.message_adapter import FileUploader
 import os
 import re
 import asyncio
