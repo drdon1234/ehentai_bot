@@ -13,17 +13,14 @@ def parse_timestamp_from_cell(cell: Tag) -> str:
 
 
 def extract_page_count(cell: Tag) -> int:
-    # 先尝试直接匹配
     page_div = cell.find('div', string=re.compile(r'(\d+)\s*pages?', re.IGNORECASE))
 
-    # 如果未找到，搜索所有div
     if not page_div:
         for div in cell.find_all('div'):
             if re.search(r'(\d+)\s*pages?', div.get_text(), re.I):
                 page_div = div
                 break
 
-    # 如果找到div，提取页数
     if page_div:
         match = re.search(r'(\d+)\s*pages?', page_div.get_text(), re.I)
         return int(match.group(1)) if match else 0
@@ -36,7 +33,6 @@ def extract_cover_url(cell: Tag) -> str:
         img_tag = cell.find('img')
         if img_tag:
             url = img_tag.get('data-src') or img_tag.get('src', '')
-            # 将缩略图URL转换为完整图片URL
             return url.replace('/t/', '/i/').split('?')[0]
     except Exception as e:
         logger.warning(f"封面解析失败: {e}")
@@ -53,14 +49,11 @@ class HTMLParser:
         results = []
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        # 查找画廊表格
         if (table := soup.find('table', class_='itg')):
-            # 处理每一行，跳过表头
             for row in table.find_all('tr')[1:]:
                 cells = row.find_all('td')
                 if len(cells) >= 4:
                     try:
-                        # 从单元格中提取数据
                         category = cells[0].get_text(strip=True)
                         gallery_url = cells[2].find('a')['href']
                         cover_url = extract_cover_url(cells[1])
@@ -78,7 +71,6 @@ class HTMLParser:
 
                         pages = extract_page_count(cells[3])
 
-                        # 创建结果字典
                         results.append({
                             "title": title.strip(),
                             "author": author.strip() if author else "Unknown",
@@ -125,11 +117,9 @@ class HTMLParser:
 
         soup = BeautifulSoup(html_content, "html.parser")
 
-        # 提取标题
         title_element = soup.select_one("#gn")
         title = title_element.text.strip() if title_element else "output"
 
-        # 提取页数
         pagination_row = soup.select_one("table.ptt > tr")
         if not pagination_row:
             return title, 1
