@@ -105,13 +105,13 @@ class EHentaiBot(BasePlugin):
             results_ui = self.helpers.get_search_results(search_results)
             await ctx.reply(MessageChain([results_ui]))
         
-    except ValueError as e:
-        logger.exception("参数解析失败")
-        await ctx.reply(MessageChain([f"参数错误：{str(e)}"]))
-        
-    except Exception as e:
-        logger.exception("搜索失败")
-        await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
+        except ValueError as e:
+            logger.exception("参数解析失败")
+            await ctx.reply(MessageChain([f"参数错误：{str(e)}"]))
+            
+        except Exception as e:
+            logger.exception("搜索失败")
+            await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
 
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         image_folder = Path(self.config['output']['image_folder'])
