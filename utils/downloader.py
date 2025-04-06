@@ -17,9 +17,8 @@ logger = logging.getLogger(__name__)
 
 class Downloader:
     def __init__(self, config: Dict[str, Any], parser: Any, helpers: Any):
-        config_path = Path(__file__).parent.parent / "config.yaml"
-        self.uploader = MessageAdapter(config_path)
         self.config = config
+        self.uploader = MessageAdapter(self.config)
         self.parser = parser
         self.helpers = helpers
         self.semaphore = asyncio.Semaphore(self.config['request']['concurrency'])
