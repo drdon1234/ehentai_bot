@@ -73,8 +73,8 @@ request:
     igneous: ""
   proxies: "" # 墙内用户必填项，代理软件位于宿主机时，非 docker 部署一般为http://127.0.0.1:port，docker 部署一般为http://{宿主机局域网ip}:port
   concurrency: 10 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
-  max_retries: 3 # 请求重试次数
-  timeout: 5 # 超时时间
+  max_retries: 3 # 请求重试次数，如果你的代理不稳定或带宽不够建议适量增加次数
+  timeout: 5 # 超时时间，同上
 ```
 
 ### 输出设置
