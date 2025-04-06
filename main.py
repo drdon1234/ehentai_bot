@@ -26,7 +26,7 @@ class EHentaiBot(BasePlugin):
         self.uploader = MessageAdapter(self.config)
         self.helpers = Helpers()
         self.parser = HTMLParser()
-        self.downloader = Downloader(self.config, self.parser, self.helpers)
+        self.downloader = Downloader(self.config, self.uploader, self.parser, self.helpers)
         self.pdf_generator = PDFGenerator(self.config, self.helpers)
 
     async def initialize(self):
