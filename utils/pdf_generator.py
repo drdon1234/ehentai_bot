@@ -24,11 +24,9 @@ class PDFGenerator:
         if not image_files:
             logger.warning("没有可用的图片文件")
 
-        # 设置安全的文件名
         pdf_dir = Path(self.config['output']['pdf_folder'])
         max_pages = self.config['output']['max_pages_per_pdf']
 
-        # 根据最大页数设置拆分PDF
         if 0 < max_pages < len(image_files):
             total = math.ceil(len(image_files) / max_pages)
 
