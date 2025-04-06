@@ -118,46 +118,51 @@ class MyPlugin(BasePlugin):
 
     # 搜索画廊
     async def search_gallery(self, ctx: EventContext, cleaned_text: str):
-        args = self.parse_command(cleaned_text)
-        args_num = len(args)
-        if args_num == 0:
-            await self.eh_helper(ctx)
-            ctx.prevent_default()
-        elif args_num >= 1:
+        try:
+            args = self.parse_command(cleaned_text)
+            if len(args) < 1 or len(args) > 4:
+                await self.eh_helper(ctx)
+                return
+            
             tags = re.sub(r'[，,+]+', ' ', args[0])
             min_rating = 2
             min_pages = 1
             target_page = 1
-            if args_num == 3:
-                min_rating = args[1]
-                min_pages = args[2]
-            elif args_num == 4:
-                target_page = args[3]
-            else:
-                await self.eh_helper(ctx)
-                ctx.prevent_default()
+            
+            if len(args) >= 2:
+                min_rating = int(args[1])
+            if len(args) >= 3:
+                min_pages = int(args[2])
+            if len(args) == 4:
+                target_page = int(args[3])
+            
             search_results = await self.downloader.crawl_ehentai(tags, min_rating, min_pages, target_page)
             results_ui = self.ui.get_search_results(search_results)
             await ctx.reply(MessageChain([results_ui]))
-
-    # 下载画廊合并为pdf文件发送
+        except Exception as e:
+            await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
+    
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
-        args = self.parse_command(cleaned_text)
-        if len(args) != 1:
-            await self.eh_helper(ctx)
-            ctx.prevent_default()
-        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-            await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
+        try:
+            args = self.parse_command(cleaned_text)
+            if len(args) != 1:
+                await self.eh_helper(ctx)
+                return
+            
             pattern = re.compile(r'^https://e-hentai\.org/g/\d{7}/[a-f0-9]{10}/$')
             if not pattern.match(args[0]):
                 await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
-                ctx.prevent_default()
                 return
-            await self.downloader.process_pagination(session, args[0])
-            await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
-            title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
-            await ctx.reply(MessageChain([f"发送 {title} 中，请稍候..."]))
-            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
+            
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+                await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
+                await self.downloader.process_pagination(session, args[0])
+                await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
+                title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
+                await ctx.reply(MessageChain([f"发送 {title} 中，请稍候..."]))
+                await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
+        except Exception as e:
+            await ctx.reply(MessageChain([f"下载失败：{str(e)}"]))
 
     # 指令帮助
     async def eh_helper(self, ctx: EventContext):
