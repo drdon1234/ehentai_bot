@@ -31,11 +31,9 @@ class EHentaiBot(BasePlugin):
         self.pdf_generator = PDFGenerator(self.config, self.helpers)
 
     async def initialize(self):
-        """异步初始化"""
         pass
 
     def __del__(self):
-        """插件卸载时触发"""
         pass
 
     @handler(PersonNormalMessageReceived)
@@ -116,7 +114,6 @@ class EHentaiBot(BasePlugin):
         await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
 
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
-        # 初始化并清理临时文件夹
         image_folder = Path(self.config['output']['image_folder'])
         pdf_folder = Path(self.config['output']['pdf_folder'])
 
@@ -125,7 +122,6 @@ class EHentaiBot(BasePlugin):
         if not pdf_folder.exists():
             pdf_folder.mkdir(parents=True)
 
-        # 清理临时图片文件
         for f in glob.glob(str(Path(self.config['output']['image_folder']) / "*.*")):
             os.remove(f)
 
@@ -135,7 +131,6 @@ class EHentaiBot(BasePlugin):
                 await self.eh_helper(ctx)
                 return
 
-            # 验证画廊链接格式
             pattern = re.compile(r'^https://(e-hentai|exhentai)\.org/g/\d{7}/[a-f0-9]{10}/$')
             if not pattern.match(args[0]):
                 await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
