@@ -165,7 +165,7 @@ class EHentaiBot(BasePlugin):
         await ctx.reply(MessageChain(["正在重载配置参数"]))
         self.config = load_config()
         self.uploader = MessageAdapter()
-        self.downloader = Downloader(self.config, self.parser, self.helpers)
+        self.downloader = Downloader(self.config, self.uploader, self.parser, self.helpers)
         self.pdf_generator = PDFGenerator(self.config, self.helpers)
         await ctx.reply(MessageChain(["已重载配置参数"]))
         
