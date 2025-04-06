@@ -54,7 +54,6 @@ class MessageAdapter:
     async def create_group_file_folder(self, group_id: str, folder_name: str) -> Optional[str]:
         url = f"http://{self.http_host}:{self.http_port}/create_group_file_folder"
 
-        # 根据平台类型准备不同的请求参数
         if self.platform_type == 'napcat':
             payload = {
                 "group_id": group_id,
@@ -98,16 +97,13 @@ class MessageAdapter:
         if folder_name == '/':
             return '/'
 
-        # 尝试查找文件夹
         data = await self.get_group_root_files(group_id)
         for folder in data.get('folders', []):
             if folder.get('folder_name') == folder_name:
                 return folder.get('folder_id')
 
-        # 如果未找到，创建文件夹
         folder_id = await self.create_group_file_folder(group_id, folder_name)
         if folder_id is None:
-            # 再次检查，以防文件夹已创建但未返回ID
             data = await self.get_group_root_files(group_id)
             for folder in data.get('folders', []):
                 if folder.get('folder_name') == folder_name:
