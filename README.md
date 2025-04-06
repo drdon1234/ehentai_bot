@@ -56,8 +56,8 @@ https://github.com/drdon1234/ehentai_bot
 ```
 platform:
   type: "napcat" # 消息平台，兼容 napcat, llonebot, lagrange
-  http_host: "192.168.5.2" # 非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
-  http_port: 13000 # 消息平台监听端口，通常为 3000 或 2333
+  http_host: "127.0.0.1" # 非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
+  http_port: 2333 # 消息平台监听端口，通常为 3000 或 2333
   api_token: "" # HTTP 服务器 token，没有则不填
 ```
 
@@ -71,10 +71,10 @@ request:
     ipb_member_id: ""
     ipb_pass_hash: ""
     igneous: ""
-  proxies: "http://192.168.5.2:17893" # 墙内用户必填项，代理软件位于宿主机时，非 docker 部署一般为http://127.0.0.1:port，docker 部署一般为http://{宿主机局域网ip}:port
-  concurrency: 5 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
+  proxies: "" # 墙内用户必填项，代理软件位于宿主机时，非 docker 部署一般为http://127.0.0.1:port，docker 部署一般为http://{宿主机局域网ip}:port
+  concurrency: 10 # 并发数量限制，在我的机器上超过5偶尔会有图片丢失问题
   max_retries: 3 # 请求重试次数
-  timeout: 10 # 超时时间
+  timeout: 5 # 超时时间
 ```
 
 ### 输出设置
