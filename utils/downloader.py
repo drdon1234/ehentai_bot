@@ -225,24 +225,14 @@ class Downloader:
 
     async def crawl_ehentai(self, search_term: str, min_rating: int = 0, min_pages: int = 0, target_page: int = 1) -> List[Dict[str, Any]]:
         base_url = f"https://{self.config['request']['website']}.org/"
-        search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages}
+        search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages, 'range': target_page}
         search_url = self.helpers.build_search_url(base_url, search_params)
         
         results = []
-        current_page = 1
         
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-            while search_url and current_page <= target_page:
-                html = await self.fetch_with_retry(session, search_url)
-                if not html:
-                    break
-                
-                if current_page == target_page:
-                    results = self.parser.parse_gallery_from_html(html, self.helpers)
-                    break
-                
-                search_url = self.parser.get_next_page_url(html)
-                current_page += 1
-                await asyncio.sleep(random.uniform(1.5, 3.5))
+            html = await self.fetch_with_retry(session, search_url)
+            if html:
+                results = self.parser.parse_gallery_from_html(html, self.helpers)
         
         return results
