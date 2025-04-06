@@ -122,8 +122,9 @@ class AsyncDownloader:
         if files:
             await ctx.reply(MessageChain(["已找到本地画廊，发送中..."]))
             await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], self.gallery_title)
-            return
-            
+            return False
+
+        await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
         page_urls = [f"{gallery_url}?p={page}" for page in range(last_page_number)]
 
         for page_url in page_urls:
@@ -131,6 +132,8 @@ class AsyncDownloader:
             if html_content:
                 subpage_urls = self.parser.extract_subpage_urls(html_content)
                 await asyncio.gather(*[self.process_subpage(session, url) for url in subpage_urls])
+                
+        return True
 
     async def crawl_ehentai(self, search_term, min_rating=0, min_pages=0, target_page=1):
         """爬取画廊数据"""
