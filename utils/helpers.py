@@ -35,13 +35,13 @@ class Helpers:
     @staticmethod
     def get_search_results(results: List[Dict[str, Any]]) -> str:
         output = "搜索结果:\n"
-        output += "=" * 80 + "\n"
+        output += "=" * 50 + "\n"
 
         for idx, result in enumerate(results, 1):
             output += f"[{idx}] {result['title']}\n"
             output += (
                 f" 作者: {result['author']} | 分类: {result['category']} | 页数: {result['pages']} | "
-                f"评分: {result['rating']} | 时间: {result['timestamp']}\n"
+                f"评分: {result['rating']} | 上传时间: {result['timestamp']}\n"
             )
             output += f" 封面: {result['cover_url']}\n"
             output += f" 画廊链接: {result['gallery_url']}\n"
