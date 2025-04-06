@@ -14,6 +14,8 @@ from PIL import Image
 
 class AsyncDownloader:
     def __init__(self, config, parser, helpers):
+        config_path = Path(__file__).parent / "config.yaml"
+        self.uploader = FileUploader(config_path)
         self.config = config
         self.parser = parser
         self.helpers = helpers
