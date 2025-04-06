@@ -112,3 +112,7 @@ output:
 - 搜索  
 
 ![搜索示例](https://github.com/user-attachments/assets/68f7c828-5891-4b2e-abc3-f17e3b57eb37)
+
+- 下载  
+
+![下载示例](https://github.com/user-attachments/assets/f5f6085a-078c-4235-9bff-51e635bba3d6)
