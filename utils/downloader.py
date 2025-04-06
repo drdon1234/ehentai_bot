@@ -16,9 +16,9 @@ from PIL import Image
 logger = logging.getLogger(__name__)
 
 class Downloader:
-    def __init__(self, config: Dict[str, Any], parser: Any, helpers: Any):
+    def __init__(self, config: Dict[str, Any], uploader: Any, parser: Any, helpers: Any):
         self.config = config
-        self.uploader = MessageAdapter(self.config)
+        self.uploader = uploader 
         self.parser = parser
         self.helpers = helpers
         self.semaphore = asyncio.Semaphore(self.config['request']['concurrency'])
