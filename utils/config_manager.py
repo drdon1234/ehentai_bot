@@ -54,7 +54,7 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
             if any(not cookies.get(key, '') for key in ["igneous", "ipb_member_id", "ipb_pass_hash", "sk"]):
                 config['website'] = 'e-hentai'
                 config_updated = True
-                logger.warning("网站设置为exhentai但cookies不完整，已降级为e-hentai")
+                logger.warning("网站设置为里站exhentai但cookies不完整，已更换为表站e-hentai")
         
         request_config = config.setdefault('request', {})
         request_config.setdefault('headers', {'User-Agent': 'Mozilla/5.0'})
