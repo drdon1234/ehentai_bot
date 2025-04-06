@@ -157,8 +157,9 @@ class EHentaiBot(BasePlugin):
 
 可用的搜索方式:
 [1] 搜eh [关键词]
-[2] 搜eh [关键词] [最低评分] [最少页数]
-[3] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]"""
+[2] 搜eh [关键词] [最低评分]
+[3] 搜eh [关键词] [最低评分] [最少页数]
+[4] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]"""
         await ctx.reply(MessageChain([help_text]))
 
     async def reload_config(self, ctx: EventContext):
