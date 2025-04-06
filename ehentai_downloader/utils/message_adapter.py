@@ -109,8 +109,10 @@ class FileUploader:
             return "/"
         return folder_id
 
-    async def upload_file(self, ctx, path, name, folder_name='/'):
+    async def upload_file(self, ctx: EventContext, path, name, folder_name='/'):
         """上传文件"""
+        await ctx.reply(MessageChain([f"发送 {name} 中，请稍候..."]))
+        
         all_files = os.listdir(path)
         pattern = re.compile(rf"^{re.escape(name)}(?: part \d+)?\.pdf$")
         matching_files = [
