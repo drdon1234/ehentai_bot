@@ -109,7 +109,7 @@ class EHentaiBot(BasePlugin):
                 return
 
             # 验证画廊链接格式
-            pattern = re.compile(r'^https://[e-hentai|exhentai]\.org/g/\d{7}/[a-f0-9]{10}/$')
+            pattern = re.compile(r'^https://(e-hentai|exhentai)\.org/g/\d{7}/[a-f0-9]{10}/$')
             if not pattern.match(args[0]):
                 await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
                 return
