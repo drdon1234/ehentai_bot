@@ -1,3 +1,6 @@
+from pkg.platform.types import MessageChain
+from pkg.plugin.context import register, handler, llm_func, BasePlugin, APIHost, EventContext
+from pkg.plugin.events import *
 import glob
 import math
 import img2pdf
@@ -10,8 +13,10 @@ class PDFGenerator:
         self.config = config
         self.helpers = helpers
 
-    async def merge_images_to_pdf(self, gallery_title):
+    async def merge_images_to_pdf(self, ctx: EventContext, gallery_title):
         """合并图片为PDF文件"""
+        await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
+        
         image_files = natsorted(glob.glob(str(Path(self.config['output']['image_folder']) / "*.jpg")))
 
         if not image_files:
