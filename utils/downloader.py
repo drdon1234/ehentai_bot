@@ -78,7 +78,7 @@ class Downloader:
                             proxy=proxy_conf.get('url'),
                             proxy_auth=proxy_conf.get('auth'),
                             timeout=aiohttp.ClientTimeout(total=self.config['request']['timeout']),
-                            ssl=False
+                            ssl=False,
                             cookies=cookies
                     ) as response:
                         response.raise_for_status()
