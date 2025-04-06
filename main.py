@@ -23,6 +23,7 @@ from plugins.ehentai_bot.ehentai_downloader.ui.interface import UserInterface
 from pathlib import Path
 import re
 import aiohttp
+import glob
 
 class Helpers:
     """帮助类，包含所有工具函数"""
@@ -149,6 +150,8 @@ class MyPlugin(BasePlugin):
             image_folder.mkdir(parents=True)
         if not pdf_folder.exists():
             pdf_folder.mkdir(parents=True)
+        for f in glob.glob(str(Path(self.config['output']['image_folder']) / "*.*")):
+            os.remove(f)
         try:
             args = self.parse_command(cleaned_text)
             if len(args) != 1:
@@ -167,9 +170,14 @@ class MyPlugin(BasePlugin):
                 title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
                 await ctx.reply(MessageChain([f"发送 {title} 中，请稍候..."]))
                 await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
+                
         except Exception as e:
             await ctx.reply(MessageChain([f"下载失败：{str(e)}"]))
-
+            
+        finally:
+            for f in glob.glob(str(Path(self.config['output']['image_folder']) / "*.*")):
+                os.remove(f)
+                
     # 指令帮助
     async def eh_helper(self, ctx: EventContext):
         str = """eh指令帮助：
