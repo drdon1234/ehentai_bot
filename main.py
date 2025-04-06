@@ -149,7 +149,6 @@ class EHentaiBot(BasePlugin):
 
     async def eh_helper(self, ctx: EventContext):
         help_text = """eh指令帮助：
-
 [1] 搜索画廊: 搜eh [关键词] [最低评分（2-5，默认2）] [最少页数（默认1）] [获取第几页的画廊列表（默认1）]
 [2] 下载画廊: 看eh [画廊链接]
 [3] 获取指令帮助: eh
@@ -157,9 +156,5 @@ class EHentaiBot(BasePlugin):
 可用的搜索方式:
 [1] 搜eh [关键词]
 [2] 搜eh [关键词] [最低评分] [最少页数]
-[3] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]
-
-PS:
-ehentai的分页目录仅能通过迭代生成，不建议获取较大页数的画廊列表"""
-
+[3] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]"""
         await ctx.reply(MessageChain([help_text]))
