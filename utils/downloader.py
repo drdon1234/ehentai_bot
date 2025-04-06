@@ -28,13 +28,15 @@ class Downloader:
         self.image_index = 1
         self.gallery_title = "output"
 
-        # 初始化目录
         Path(self.config['output']['image_folder']).mkdir(parents=True, exist_ok=True)
         Path(self.config['output']['pdf_folder']).mkdir(parents=True, exist_ok=True)
 
+
     async def fetch_with_retry(self, session: aiohttp.ClientSession, url: str) -> Optional[str]:
         proxy_conf = self.config['request'].get('proxy', {})
-
+        
+        cookies = self.config['request']['cookies'] if self.config['request']['website'] == 'exhentai' else None
+    
         for attempt in range(self.config['request']['max_retries']):
             try:
                 async with self.semaphore:
@@ -44,7 +46,8 @@ class Downloader:
                             proxy=proxy_conf.get('url'),
                             proxy_auth=proxy_conf.get('auth'),
                             timeout=aiohttp.ClientTimeout(total=self.config['request']['timeout']),
-                            ssl=False
+                            ssl=False,
+                            cookies=cookies
                     ) as response:
                         response.raise_for_status()
                         return await response.text()
@@ -54,16 +57,18 @@ class Downloader:
                 logger.warning(f"HTTP错误 {e.status}，尝试 {attempt + 1}/{self.config['request']['max_retries']}: {url}")
             except Exception as e:
                 logger.warning(f"尝试 {attempt + 1}/{self.config['request']['max_retries']} 失败: {url} - {str(e)}")
-
+    
             # 指数退避
             await asyncio.sleep(2 ** attempt)
-
+    
         logger.error(f"请求失败，放弃: {url}")
         return None
 
     async def download_image(self, session: aiohttp.ClientSession, img_url: str) -> bool:
         proxy_conf = self.config['request'].get('proxy', {})
-
+        
+        cookies = self.config['request']['cookies'] if self.config['request']['website'] == 'exhentai' else None
+        
         for attempt in range(self.config['request']['max_retries']):
             try:
                 async with self.semaphore:
@@ -74,6 +79,7 @@ class Downloader:
                             proxy_auth=proxy_conf.get('auth'),
                             timeout=aiohttp.ClientTimeout(total=self.config['request']['timeout']),
                             ssl=False
+                            cookies=cookies
                     ) as response:
                         response.raise_for_status()
                         content = await response.read()
@@ -122,7 +128,6 @@ class Downloader:
         self.gallery_title, last_page_number = self.parser.extract_gallery_info(main_html)
         pdf_folder = self.config['output']['pdf_folder']
 
-        # 检查是否已经有PDF文件
         all_files = os.listdir(pdf_folder)
         pattern = re.compile(rf"^{re.escape(self.gallery_title)}(?: part \d+)?\.pdf$")
         matching_files = [
@@ -137,7 +142,6 @@ class Downloader:
 
         await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
 
-        # 处理所有页面
         page_urls = [f"{gallery_url}?p={page}" for page in range(last_page_number)]
 
         for page_url in page_urls:
@@ -148,27 +152,27 @@ class Downloader:
 
         return False
 
-    async def crawl_ehentai(self, search_term: str, min_rating: int = 0, min_pages: int = 0, target_page: int = 1) -> \
-    List[Dict[str, Any]]:
-        base_url = "https://e-hentai.org/"
+    async def crawl_ehentai(self, search_term: str, min_rating: int = 0, min_pages: int = 0, target_page: int = 1) -> List[Dict[str, Any]]:
+        base_url = f"https://{self.config['request']['website']}.org/"
         search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages}
         search_url = self.helpers.build_search_url(base_url, search_params)
-
+    
         results = []
         current_page = 1
-
+    
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             while search_url and current_page <= target_page:
                 html = await self.fetch_with_retry(session, search_url)
                 if not html:
                     break
-
+    
                 if current_page == target_page:
                     results = self.parser.parse_gallery_from_html(html, self.helpers)
                     break
-
+    
                 search_url = self.parser.get_next_page_url(html)
                 current_page += 1
                 await asyncio.sleep(random.uniform(1.5, 3.5))
-
+    
         return results
+
