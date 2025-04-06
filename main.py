@@ -62,31 +62,58 @@ class EHentaiBot(BasePlugin):
         return [p for p in message.split(' ') if p][1:]
 
     async def search_gallery(self, ctx: EventContext, cleaned_text: str):
+        
+        defaults = {
+            "min_rating": 2,
+            "min_pages": 1,
+            "target_page": 1
+        }
+        
         try:
             args = self.parse_command(cleaned_text)
-            if len(args) < 1 or len(args) > 4:
+            if not args:
                 await self.eh_helper(ctx)
                 return
-
+                
+            if len(args) > 4:
+                await ctx.reply(MessageChain(["参数过多，最多支持4个参数：标签 评分 页数 页码"]))
+                return
+                
             tags = re.sub(r'[，,+]+', ' ', args[0])
-            min_rating = 2
-            min_pages = 1
-            target_page = 1
-
-            if len(args) >= 2:
-                min_rating = int(args[1])
-            if len(args) >= 3:
-                min_pages = int(args[2])
-            if len(args) == 4:
-                target_page = int(args[3])
-
-            search_results = await self.downloader.crawl_ehentai(tags, min_rating, min_pages, target_page)
+            
+            params = defaults.copy()
+            param_names = ["min_rating", "min_pages", "target_page"]
+            
+            for i, (name, value) in enumerate(zip(param_names, args[1:]), 1):
+                try:
+                    params[name] = int(value)
+                except ValueError:
+                    await ctx.reply(MessageChain([f"第{i+1}个参数应为整数: {value}"]))
+                    return
+            
+            await ctx.reply(MessageChain(["正在搜索，请稍候..."]))
+            
+            search_results = await self.downloader.crawl_ehentai(
+                tags, 
+                params["min_rating"], 
+                params["min_pages"], 
+                params["target_page"]
+            )
+            
+            if not search_results:
+                await ctx.reply(MessageChain(["未找到符合条件的结果"]))
+                return
+    
             results_ui = self.helpers.get_search_results(search_results)
-
             await ctx.reply(MessageChain([results_ui]))
-        except Exception as e:
-            logger.exception("搜索失败")
-            await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
+        
+    except ValueError as e:
+        logger.exception("参数解析失败")
+        await ctx.reply(MessageChain([f"参数错误：{str(e)}"]))
+        
+    except Exception as e:
+        logger.exception("搜索失败")
+        await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
 
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         # 初始化并清理临时文件夹
