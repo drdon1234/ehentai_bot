@@ -172,10 +172,6 @@ class MyPlugin(BasePlugin):
                 
         except Exception as e:
             await ctx.reply(MessageChain([f"下载失败：{str(e)}"]))
-            
-        finally:
-            for f in glob.glob(str(Path(self.config['output']['image_folder']) / "*.*")):
-                os.remove(f)
                 
     # 指令帮助
     async def eh_helper(self, ctx: EventContext):
