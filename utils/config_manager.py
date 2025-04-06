@@ -42,16 +42,14 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
 
         website = config.setdefault('website', 'e-hentai')
         cookies = config.setdefault('cookies', {
-            "igneous": "",
             "ipb_member_id": "",
             "ipb_pass_hash": "",
-            "sk": "",
-            "yay": "louder"
+			"igneous": ""
         })
         
         config_updated = False
         if website == 'exhentai':
-            if any(not cookies.get(key, '') for key in ["igneous", "ipb_member_id", "ipb_pass_hash", "sk"]):
+            if any(not cookies.get(key, '') for key in ["ipb_member_id", "ipb_pass_hash", "igneous"]):
                 config['website'] = 'e-hentai'
                 config_updated = True
                 logger.warning("网站设置为里站exhentai但cookies不完整，已更换为表站e-hentai")
