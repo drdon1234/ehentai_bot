@@ -21,6 +21,7 @@ from plugins.ehentai_bot.ehentai_downloader.downloader.async_downloader import A
 from plugins.ehentai_bot.ehentai_downloader.pdf_generator.generator import PDFGenerator
 from plugins.ehentai_bot.ehentai_downloader.ui.interface import UserInterface
 from pathlib import Path
+import os
 import re
 import aiohttp
 import glob
