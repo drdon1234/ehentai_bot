@@ -111,17 +111,17 @@ class AsyncDownloader:
             raise ValueError("无法获取主页面内容")
 
         self.gallery_title, last_page_number = self.parser.extract_gallery_info(main_html)
-        
-        all_files = os.listdir(self.config['output']['pdf_folder'])
+        pdf_folder = self.config['output']['pdf_folder']
+        all_files = os.listdir(pdf_folder)
         pattern = re.compile(rf"^{re.escape(self.gallery_title)}(?: part \d+)?\.pdf$")
         matching_files = [
-            os.path.join(path, f) for f in all_files if pattern.match(f)
+            os.path.join(pdf_folder, f) for f in all_files if pattern.match(f)
         ]
         files = natsorted(matching_files)
     
         if files:
             await ctx.reply(MessageChain(["已找到本地画廊，发送中..."]))
-            await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], self.gallery_title)
+            await self.uploader.upload_file(ctx, pdf_folder, self.gallery_title)
             return True
 
         await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
