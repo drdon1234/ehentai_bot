@@ -15,16 +15,12 @@ logger = logging.getLogger(__name__)
 
 
 class MessageAdapter:
-    def __init__(self, config_path: Union[str, Path]):
-        self.config = self._load_config(config_path)
+    def __init__(self, config: Dict[str, Any]):
+        self.config = config
         self.platform_type = self.config["platform"]["type"]
         self.http_host = self.config["platform"]["http_host"]
         self.http_port = self.config["platform"]["http_port"]
         self.api_token = self.config["platform"]["api_token"]
-
-    def _load_config(self, config_path: Union[str, Path]) -> Dict[str, Any]:
-        with open(config_path, "r", encoding="utf-8") as file:
-            return yaml.safe_load(file)
 
     def get_headers(self) -> Dict[str, str]:
         headers = {'Content-Type': 'application/json'}
