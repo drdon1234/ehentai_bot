@@ -9,4 +9,3 @@ PyYAML
 python-magic
 glob2
 pathlib
-yaml
