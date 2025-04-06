@@ -165,12 +165,10 @@ class MyPlugin(BasePlugin):
                 return
             
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-                await ctx.reply(MessageChain(["正在下载画廊图片，请稍候..."]))
-                await self.downloader.process_pagination(session, args[0])
-                await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
-                title = await self.pdf_generator.merge_images_to_pdf(self.downloader.gallery_title)
-                await ctx.reply(MessageChain([f"发送 {title} 中，请稍候..."]))
-                await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
+                isExist = await self.downloader.process_pagination(ctx, session, args[0])
+                if not isExist:
+                    title = await self.pdf_generator.merge_images_to_pdf(ctx, self.downloader.gallery_title)
+                    await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
                 
         except Exception as e:
             await ctx.reply(MessageChain([f"下载失败：{str(e)}"]))
