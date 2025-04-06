@@ -21,7 +21,6 @@ def parse_proxy_config(proxy_str: str) -> Dict[str, Any]:
     if parsed.username and parsed.password:
         auth = aiohttp.BasicAuth(parsed.username, parsed.password)
 
-    # 构建代理URL
     proxy_url = f"{parsed.scheme}://{parsed.hostname}"
     if parsed.port:
         proxy_url += f":{parsed.port}"
