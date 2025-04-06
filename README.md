@@ -106,6 +106,9 @@ output:
 - 随机画廊  
 - ~~重构项目以增加可读性~~ (已重构)
 
+---
+
 ## 使用示例
-- 搜索
+- 搜索  
+
 ![搜索示例](https://github.com/user-attachments/assets/68f7c828-5891-4b2e-abc3-f17e3b57eb37)
