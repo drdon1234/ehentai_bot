@@ -40,7 +40,29 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f) or {}
 
-        # 请求配置
+        # 设置网站参数默认值
+        website = config.setdefault('website', 'e-hentai')
+        
+        # 设置cookies默认值
+        cookies = config.setdefault('cookies', {
+            "igneous": "",
+            "ipb_member_id": "",
+            "ipb_pass_hash": "",
+            "yay": "",
+            "sk": ""
+        })
+        
+        # 当网站为exhentai时验证cookies
+        config_updated = False
+        if website == 'exhentai':
+            # 检查是否有任何cookie值为空
+            if any(not cookies.get(key, '') for key in ["igneous", "ipb_member_id", "ipb_pass_hash", "yay", "sk"]):
+                # 如果有任何cookie为空，降级为e-hentai
+                config['website'] = 'e-hentai'
+                config_updated = True
+                logger.warning("网站设置为exhentai但cookies不完整，已降级为e-hentai")
+        
+        # 原有的配置加载代码
         request_config = config.setdefault('request', {})
         request_config.setdefault('headers', {'User-Agent': 'Mozilla/5.0'})
         request_config.setdefault('concurrency', 5)
@@ -58,6 +80,11 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
         output_config.setdefault('pdf_folder', './pdfs')
         output_config.setdefault('jpeg_quality', 85)
         output_config.setdefault('max_pages_per_pdf', 200)
+        
+        # 如果配置有更新，保存到文件
+        if config_updated:
+            with open(config_path, 'w', encoding='utf-8') as f:
+                yaml.dump(config, f, allow_unicode=True, default_flow_style=False)
 
         return config
     except FileNotFoundError:
