@@ -34,7 +34,7 @@ class Helpers:
 
     @staticmethod
     def get_search_results(results: List[Dict[str, Any]]) -> str:
-        output = "\n搜索结果:\n"
+        output = "搜索结果:\n"
         output += "=" * 80 + "\n"
 
         for idx, result in enumerate(results, 1):
