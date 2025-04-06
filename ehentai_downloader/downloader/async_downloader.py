@@ -104,7 +104,7 @@ class AsyncDownloader:
         if img_url:
             await self.download_image(session, img_url)
 
-    async def process_pagination(self, ctx, session, gallery_url):
+    async def process_pagination(self, ctx: EventContext, session, gallery_url):
         """处理分页"""
         main_html = await self.fetch_with_retry(session, gallery_url)
         if not main_html:
