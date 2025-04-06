@@ -234,5 +234,8 @@ class Downloader:
             html = await self.fetch_with_retry(session, search_url)
             if html:
                 results = self.parser.parse_gallery_from_html(html, self.helpers)
+                
+        if not results:
+            results.append(f"未找到关键词为 {search_term} 的相关画廊")
         
         return results
