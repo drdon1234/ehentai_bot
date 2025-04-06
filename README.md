@@ -102,6 +102,7 @@ output:
 
 ## 开发中的功能
 
-- 请求结构中添加cookie选项以访问里站
+- 请求结构中添加cookie选![搜索示例](https://github.com/user-attachments/assets/4e39679b-6561-42ea-ba78-8ea8e96d9237)
+项以访问里站
 - 随机画廊  
 - ~~重构项目以增加可读性~~ (已重构)
