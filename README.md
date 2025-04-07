@@ -29,6 +29,9 @@ https://github.com/drdon1234/ehentai_bot
 - **获取指令帮助**  
 ```eh```
 
+- **热重载config配置**  
+```重载eh配置```
+
 ### 可用的搜索方式
 
 1. 基础搜索：  
