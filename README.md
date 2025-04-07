@@ -59,8 +59,8 @@ https://github.com/drdon1234/ehentai_bot
 ```
 platform:
   type: "napcat" # 消息平台，兼容 napcat, llonebot, lagrange
-  http_host: "127.0.0.1" # 非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
-  http_port: 2333 # 消息平台监听端口，通常为 2333 或 3000
+  http_host: "127.0.0.1" # HTTP 服务器 IP，非 docker 部署一般为 127.0.0.1，docker 部署一般为宿主机局域网 IP
+  http_port: 2333 # HTTP 服务器端口，通常为 2333 或 3000
   api_token: "" # HTTP 服务器 token，没有则不填
 ```
 
