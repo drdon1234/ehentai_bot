@@ -124,3 +124,11 @@ output:
 - 下载  
 
 ![下载示例](https://github.com/user-attachments/assets/f5f6085a-078c-4235-9bff-51e635bba3d6)
+
+---
+
+## 鸣谢
+
+用户指令清洗和消息适配器参考了[exneverbur](https://github.com/exneverbur)的[ShowMeJM](https://github.com/exneverbur/ShowMeJM)项目，感谢
+
+---
