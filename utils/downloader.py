@@ -1,6 +1,5 @@
 from pkg.platform.types import MessageChain
 from pkg.plugin.context import EventContext
-from plugins.ehentai_bot.utils.message_adapter import MessageAdapter
 from typing import List, Dict, Any, Optional, Tuple
 import os
 import re
