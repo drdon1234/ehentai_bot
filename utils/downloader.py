@@ -14,12 +14,18 @@ from PIL import Image
 
 logger = logging.getLogger(__name__)
 
+def build_search_url(base_url: str, params: Dict[str, Any]) -> str:
+    parsed_url = urlparse(base_url)
+    query = parse_qs(parsed_url.query)
+    query.update(params)
+    new_query = urlencode(query, doseq=True)
+    return urlunparse(parsed_url._replace(query=new_query))
+
 class Downloader:
-    def __init__(self, config: Dict[str, Any], uploader: Any, parser: Any, helpers: Any):
+    def __init__(self, config: Dict[str, Any], uploader: Any, parser: Any):
         self.config = config
-        self.uploader = uploader 
+        self.uploader = uploader
         self.parser = parser
-        self.helpers = helpers
         self.semaphore = asyncio.Semaphore(self.config['request']['concurrency'])
         self.gallery_title = "output"
         Path(self.config['output']['image_folder']).mkdir(parents=True, exist_ok=True)
