@@ -6,55 +6,58 @@ from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 
-def parse_background_position(style: str) -> Tuple[int, int]:
-    match = re.search(r'background-position:\s*(-?\d+)px\s+(-?\d+)px', style)
-    return (int(match.group(1)), int(match.group(2))) if match else (0, 0)
-
-def calculate_rating(x: int, y: int) -> float:
-    full_stars = 5 - abs(x) // 16
-    half_star = 0.5 if y == -21 else 0
-    return full_stars - half_star
-
-def extract_author_and_title(raw_title: str) -> Tuple[str, str]:
-    match = re.match(r'^\[(.*?)\]\s*(.*)', raw_title)
-    return (match.groups() if match else (None, raw_title))
-
-def parse_timestamp_from_cell(cell: Tag) -> str:
-    match = re.search(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2})', cell.get_text(strip=True))
-    return match.group(1) if match else time.strftime("%Y-%m-%d %H:%M")
-
-
-def extract_page_count(cell: Tag) -> int:
-    page_div = cell.find('div', string=re.compile(r'(\d+)\s*pages?', re.IGNORECASE))
-
-    if not page_div:
-        for div in cell.find_all('div'):
-            if re.search(r'(\d+)\s*pages?', div.get_text(), re.I):
-                page_div = div
-                break
-
-    if page_div:
-        match = re.search(r'(\d+)\s*pages?', page_div.get_text(), re.I)
-        return int(match.group(1)) if match else 0
-
-    return 0
-
-
-def extract_cover_url(cell: Tag) -> str:
-    try:
-        img_tag = cell.find('img')
-        if img_tag:
-            url = img_tag.get('data-src') or img_tag.get('src', '')
-            return url.replace('/t/', '/i/').split('?')[0]
-    except Exception as e:
-        logger.warning(f"封面解析失败: {e}")
-
-    return ""
-
-
 class HTMLParser:
     @staticmethod
-    def parse_gallery_from_html(html_content: str, helpers: Any) -> List[Dict[str, Any]]:
+    def parse_background_position(style: str) -> Tuple[int, int]:
+        match = re.search(r'background-position:\s*(-?\d+)px\s+(-?\d+)px', style)
+        return (int(match.group(1)), int(match.group(2))) if match else (0, 0)
+
+    @staticmethod
+    def calculate_rating(x: int, y: int) -> float:
+        full_stars = 5 - abs(x) // 16
+        half_star = 0.5 if y == -21 else 0
+        return full_stars - half_star
+
+    @staticmethod
+    def extract_author_and_title(raw_title: str) -> Tuple[str, str]:
+        match = re.match(r'^\[(.*?)\]\s*(.*)', raw_title)
+        return (match.groups() if match else (None, raw_title))
+
+    @staticmethod
+    def parse_timestamp_from_cell(cell: Tag) -> str:
+        match = re.search(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2})', cell.get_text(strip=True))
+        return match.group(1) if match else time.strftime("%Y-%m-%d %H:%M")
+
+    @staticmethod
+    def extract_page_count(cell: Tag) -> int:
+        page_div = cell.find('div', string=re.compile(r'(\d+)\s*pages?', re.IGNORECASE))
+
+        if not page_div:
+            for div in cell.find_all('div'):
+                if re.search(r'(\d+)\s*pages?', div.get_text(), re.I):
+                    page_div = div
+                    break
+
+        if page_div:
+            match = re.search(r'(\d+)\s*pages?', page_div.get_text(), re.I)
+            return int(match.group(1)) if match else 0
+
+        return 0
+
+    @staticmethod
+    def extract_cover_url(cell: Tag) -> str:
+        try:
+            img_tag = cell.find('img')
+            if img_tag:
+                url = img_tag.get('data-src') or img_tag.get('src', '')
+                return url.replace('/t/', '/i/').split('?')[0]
+        except Exception as e:
+            logger.warning(f"封面解析失败: {e}")
+
+        return ""
+
+    @staticmethod
+    def parse_gallery_from_html(html_content: str) -> List[Dict[str, Any]]:
         if not html_content:
             return []
 
@@ -68,20 +71,20 @@ class HTMLParser:
                     try:
                         category = cells[0].get_text(strip=True)
                         gallery_url = cells[2].find('a')['href']
-                        cover_url = extract_cover_url(cells[1])
-                        timestamp = parse_timestamp_from_cell(cells[1])
+                        cover_url = HTMLParser.extract_cover_url(cells[1])
+                        timestamp = HTMLParser.parse_timestamp_from_cell(cells[1])
 
                         title_element = cells[2].find('a')
                         raw_title = title_element.find('div', class_='glink').get_text(strip=True)
-                        author, title = helpers.extract_author_and_title(raw_title)
+                        author, title = HTMLParser.extract_author_and_title(raw_title)
 
                         rating_div = cells[1].find('div', class_='ir')
                         rating = 0.0
                         if rating_div:
-                            x, y = helpers.parse_background_position(rating_div.get('style', ''))
-                            rating = helpers.calculate_rating(x, y)
+                            x, y = HTMLParser.parse_background_position(rating_div.get('style', ''))
+                            rating = HTMLParser.calculate_rating(x, y)
 
-                        pages = extract_page_count(cells[3])
+                        pages = HTMLParser.extract_page_count(cells[3])
 
                         results.append({
                             "title": title.strip(),
