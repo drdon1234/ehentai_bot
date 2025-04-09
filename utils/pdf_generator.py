@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class PDFGenerator:
-    def __init__(self, config: Dict[str, Any], helpers: Any):
+    def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.helpers = helpers
 
     async def merge_images_to_pdf(self, ctx: EventContext, gallery_title: str) -> str:
         await ctx.reply(MessageChain(["正在将图片合并为pdf文件，请稍候..."]))
