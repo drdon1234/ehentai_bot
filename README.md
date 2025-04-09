@@ -5,7 +5,7 @@
 1. **使用管理员账号安装**  
 - 在 LangBot 配置完毕后，使用管理员账号对 Bot 发送以下指令：
 ```
-!plugin get https://github.com/exneverbur/ShowMeJM
+!plugin get https://github.com/drdon1234/ehentai_bot
 ```
 2. **通过 WebUI 安装**  
 - 打开 "LangBot WebUI" -> "插件" -> "+ 安装"  
