@@ -249,3 +249,24 @@ class Downloader:
                 f.write(img2pdf.convert(image_files))
             logger.info(f"生成PDF: {output_path.name}")
             
+    async def crawl_ehentai(self, search_term: str, min_rating: int = 0, min_pages: int = 0, target_page: int = 1) -> \
+    List[Dict[str, Any]]:
+        base_url = f"https://{self.config['request']['website']}.org/"
+        search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages, 'range': target_page}
+        parsed_url = urlparse(base_url)
+        query = parse_qs(parsed_url.query)
+        query.update(search_params)
+        new_query = urlencode(query, doseq=True)
+        search_url = urlunparse(parsed_url._replace(query=new_query))
+
+        results = []
+
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+            html = await self.fetch_with_retry(session, search_url)
+            if html:
+                results = self.parser.parse_gallery_from_html(html)
+
+        if not results:
+            results.append(f"未找到关键词为 {search_term} 的相关画廊")
+
+        return results
