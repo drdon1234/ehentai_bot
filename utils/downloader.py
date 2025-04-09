@@ -229,7 +229,7 @@ class Downloader:
         search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages, 'range': target_page}
         parsed_url = urlparse(base_url)
         query = parse_qs(parsed_url.query)
-        query.update(params)
+        query.update(search_params)
         new_query = urlencode(query, doseq=True)
         search_url = urlunparse(parsed_url._replace(query=new_query))
         
