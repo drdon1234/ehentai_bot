@@ -6,6 +6,18 @@ from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 
+def parse_background_position(style: str) -> Tuple[int, int]:
+    match = re.search(r'background-position:\s*(-?\d+)px\s+(-?\d+)px', style)
+    return (int(match.group(1)), int(match.group(2))) if match else (0, 0)
+
+def calculate_rating(x: int, y: int) -> float:
+    full_stars = 5 - abs(x) // 16
+    half_star = 0.5 if y == -21 else 0
+    return full_stars - half_star
+
+def extract_author_and_title(raw_title: str) -> Tuple[str, str]:
+    match = re.match(r'^\[(.*?)\]\s*(.*)', raw_title)
+    return (match.groups() if match else (None, raw_title))
 
 def parse_timestamp_from_cell(cell: Tag) -> str:
     match = re.search(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2})', cell.get_text(strip=True))
