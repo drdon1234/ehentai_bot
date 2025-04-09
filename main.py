@@ -101,7 +101,7 @@ class EHentaiBot(BasePlugin):
                 
             output = "搜索结果:\n"
             output += "=" * 50 + "\n"
-            for idx, result in enumerate(results, 1):
+            for idx, result in enumerate(search_results, 1):
                 output += f"[{idx}] {result['title']}\n"
                 output += (
                     f" 作者: {result['author']} | 分类: {result['category']} | 页数: {result['pages']} | "
