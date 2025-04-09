@@ -7,31 +7,6 @@ from bs4 import BeautifulSoup, Tag
 logger = logging.getLogger(__name__)
 
 class HTMLParser:
-    def __init__(self, config: Dict[str, Any]):
-        self.config = config
-        
-    async def crawl_ehentai(self, search_term: str, min_rating: int = 0, min_pages: int = 0, target_page: int = 1) -> \
-    List[Dict[str, Any]]:
-        base_url = f"https://{self.config['request']['website']}.org/"
-        search_params = {'f_search': search_term, 'f_srdd': min_rating, 'f_spf': min_pages, 'range': target_page}
-        parsed_url = urlparse(base_url)
-        query = parse_qs(parsed_url.query)
-        query.update(search_params)
-        new_query = urlencode(query, doseq=True)
-        search_url = urlunparse(parsed_url._replace(query=new_query))
-
-        results = []
-
-        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-            html = await self.fetch_with_retry(session, search_url)
-            if html:
-                results = self.parser.parse_gallery_from_html(html)
-
-        if not results:
-            results.append(f"未找到关键词为 {search_term} 的相关画廊")
-
-        return results
-
     @staticmethod
     def parse_background_position(style: str) -> Tuple[int, int]:
         match = re.search(r'background-position:\s*(-?\d+)px\s+(-?\d+)px', style)
