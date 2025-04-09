@@ -2,12 +2,12 @@
 
 ## 安装方法
 
-1. **使用管理员账号安装插件**  
+1. **使用管理员账号安装**  
 在 LangBot 配置完毕后，使用管理员账号对 Bot 发送以下指令：
 ```
 !plugin get https://github.com/exneverbur/ShowMeJM
 ```
-2. **通过 WebUI 安装插件**  
+2. **通过 WebUI 安装**  
 - 打开 "LangBot WebUI" -> "插件" -> "+ 安装"  
 - 输入以下地址并点击安装：
 ```
