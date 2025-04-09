@@ -1,7 +1,7 @@
 platform:
   type: "napcat" # 消息平台，兼容napcat, llonebot, lagrange
-  http_host: "127.0.0.1" # 非docker部署一般为127.0.0.1，docker部署一般为宿主机局域网ip
-  http_port: 2333 # 消息平台监听端口，通常为2333或3000
+  http_host: "127.0.0.1" # http服务器ip，非docker部署一般为127.0.0.1，docker部署一般为宿主机局域网ip
+  http_port: 2333 # http服务器端口，通常为2333或3000
   api_token: "" # http服务器token，没有则不填
 
 request:
