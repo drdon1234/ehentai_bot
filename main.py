@@ -154,6 +154,7 @@ class EHentaiBot(BasePlugin):
                     title = self.downloader.gallery_title
                     await self.pdf_generator.merge_images_to_pdf(ctx, title)
                     await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
+                    
         except Exception as e:
             logger.exception("下载失败")
             await ctx.reply(MessageChain([f"下载失败：{str(e)}"]))
