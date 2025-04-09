@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 
+
 class HTMLParser:
     @staticmethod
     def parse_background_position(style: str) -> Tuple[int, int]:
