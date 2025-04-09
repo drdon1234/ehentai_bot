@@ -185,7 +185,7 @@ class Downloader:
 
         if failed:
             await ctx.reply(MessageChain([f"首次下载完成，但有 {len(failed)} 个页面失败，正在重试..."]))
-            retry_results = await self.retry_failed_downloads(ctx, session, failed)
+            retry_results = await self.retry_failed_downloads(session, failed)
 
             retry_successful = [r for r in retry_results if r.get("success")]
             retry_failed = [r for r in retry_results if not r.get("success")]
@@ -200,7 +200,7 @@ class Downloader:
 
         return False
 
-    async def retry_failed_downloads(self, ctx: EventContext, session: aiohttp.ClientSession,
+    async def retry_failed_downloads(self, session: aiohttp.ClientSession,
                                      failed_items: list) -> list:
         if not failed_items:
             return []
