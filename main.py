@@ -21,7 +21,7 @@ class EHentaiBot(BasePlugin):
     def __init__(self, host: APIHost):
         super().__init__(host)
         self.config = load_config()
-        self.parser = HTMLParser()
+        self.parser = HTMLParser(self.config)
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
 
@@ -88,7 +88,7 @@ class EHentaiBot(BasePlugin):
             
             await ctx.reply(MessageChain(["正在搜索，请稍候..."]))
             
-            search_results = await self.downloader.crawl_ehentai(
+            search_results = await self.parser.crawl_ehentai(
                 tags, 
                 params["min_rating"], 
                 params["min_pages"], 
