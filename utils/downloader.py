@@ -21,6 +21,7 @@ def build_search_url(base_url: str, params: Dict[str, Any]) -> str:
     new_query = urlencode(query, doseq=True)
     return urlunparse(parsed_url._replace(query=new_query))
 
+
 class Downloader:
     def __init__(self, config: Dict[str, Any], uploader: Any, parser: Any):
         self.config = config
