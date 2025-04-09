@@ -26,7 +26,7 @@ class HTMLParser:
     @staticmethod
     def parse_timestamp_from_cell(cell: Tag) -> str:
         match = re.search(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2})', cell.get_text(strip=True))
-        return match.group(1) if match else time.strftime("%Y-%m-%d %H:%M")
+        return match.group(1) if match else time.strftime("%Y-%m-%d")
 
     @staticmethod
     def extract_page_count(cell: Tag) -> int:
