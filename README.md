@@ -3,7 +3,7 @@
 ## 安装方法
 
 1. **使用管理员账号安装**  
-在 LangBot 配置完毕后，使用管理员账号对 Bot 发送以下指令：
+- 在 LangBot 配置完毕后，使用管理员账号对 Bot 发送以下指令：
 ```
 !plugin get https://github.com/exneverbur/ShowMeJM
 ```
