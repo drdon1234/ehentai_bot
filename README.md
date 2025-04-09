@@ -91,6 +91,27 @@ output:
 
 ---
 
+## 依赖库安装（重要！）
+
+使用前请先安装以下依赖库：
+- aiofiles
+- aiohttp
+- PyYAML
+- natsort
+- glob2
+- python-magic
+- beautifulsoup4
+- img2pdf
+- Pillow
+
+在你的终端输入以下命令并回车：
+```
+pip install <module>
+```
+*使用具体模块名替换 &lt;module&gt;*
+
+---
+
 ## Docker 部署注意事项
 
 如果您是 Docker 部署，请务必为消息平台容器挂载 PDF 文件所在的文件夹，否则消息平台将无法解析文件路径。
