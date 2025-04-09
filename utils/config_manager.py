@@ -43,16 +43,16 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
         cookies = config.setdefault('cookies', {
             "ipb_member_id": "",
             "ipb_pass_hash": "",
-			"igneous": ""
+            "igneous": ""
         })
-        
+
         config_updated = False
         if website == 'exhentai':
             if any(not cookies.get(key, '') for key in ["ipb_member_id", "ipb_pass_hash", "igneous"]):
                 config['website'] = 'e-hentai'
                 config_updated = True
                 logger.warning("网站设置为里站exhentai但cookies不完整，已更换为表站e-hentai")
-        
+
         request_config = config.setdefault('request', {})
         request_config.setdefault('headers', {'User-Agent': 'Mozilla/5.0'})
         request_config.setdefault('concurrency', 5)
@@ -66,10 +66,10 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
         output_config = config.setdefault('output', {})
         output_config.setdefault('image_folder', './ehentai/tempImages')
         output_config.setdefault('pdf_folder', './ehentai/pdf')
-	output_config.setdefault('search_cache_folder', './ehentai/searchCache')
+        output_config.setdefault('search_cache_folder', './ehentai/searchCache')
         output_config.setdefault('jpeg_quality', 85)
         output_config.setdefault('max_pages_per_pdf', 200)
-        
+
         if config_updated:
             with open(config_path, 'w', encoding='utf-8') as f:
                 yaml.dump(config, f, allow_unicode=True, default_flow_style=False)
