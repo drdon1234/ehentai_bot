@@ -18,8 +18,9 @@ request:
   timeout: 5 # 超时时间，同上
 
 output:
-  image_folder: "/app/sharedFolder/tempImages" # 暂时存放画廊图片的文件夹路径
-  pdf_folder: "/app/sharedFolder/ehentai" # 存放pdf文件的路径
+  image_folder: "/app/sharedFolder/tempImages" # 缓存画廊图片的文件夹路径
+  pdf_folder: "/app/sharedFolder/ehentai" # 存放pdf文件的文件夹路径
+  cache_folder: "/app/sharedFolder/searchCache" # 缓存每个用户搜索结果的文件夹路径
   jpeg_quality: 85 # 图片质量，100为不压缩，85左右可以达到文件大小和质量的最佳平衡
   max_pages_per_pdf: 200 # 单个pdf文件最大页数
 
