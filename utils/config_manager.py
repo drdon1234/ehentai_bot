@@ -64,8 +64,9 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> Dict[str, Any
         request_config['proxy'] = proxy_config
 
         output_config = config.setdefault('output', {})
-        output_config.setdefault('image_folder', './images')
+        output_config.setdefault('image_folder', './tempImages')
         output_config.setdefault('pdf_folder', './pdfs')
+	output_config.setdefault('search_cache_folder', './searchCache')
         output_config.setdefault('jpeg_quality', 85)
         output_config.setdefault('max_pages_per_pdf', 200)
         
