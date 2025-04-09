@@ -90,13 +90,17 @@ class HTMLParser:
         title_element = soup.select_one("#gn")
         title = title_element.text.strip() if title_element else "output"
 
+        forbidden_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', "'"]
+        for char in forbidden_chars:
+            title = title.replace(char, '-')
+
         pagination_row = soup.select_one("table.ptt > tr")
         if not pagination_row:
             return title, 1
 
         last_page_element = pagination_row.find_all("td")[-2].find("a")
         last_page_number = int(last_page_element.text.strip()) if last_page_element else 1
-
+        
         return title, last_page_number
 
     @staticmethod
