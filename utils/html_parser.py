@@ -57,51 +57,6 @@ class HTMLParser:
         return ""
 
     @staticmethod
-    def parse_gallery_from_html(html_content: str) -> List[Dict[str, Any]]:
-        if not html_content:
-            return []
-
-        results = []
-        soup = BeautifulSoup(html_content, 'html.parser')
-
-        if (table := soup.find('table', class_='itg')):
-            for row in table.find_all('tr')[1:]:
-                cells = row.find_all('td')
-                if len(cells) >= 4:
-                    try:
-                        category = cells[0].get_text(strip=True)
-                        gallery_url = cells[2].find('a')['href']
-                        cover_url = HTMLParser.extract_cover_url(cells[1])
-                        timestamp = HTMLParser.parse_timestamp_from_cell(cells[1])
-
-                        title_element = cells[2].find('a')
-                        raw_title = title_element.find('div', class_='glink').get_text(strip=True)
-                        author, title = HTMLParser.extract_author_and_title(raw_title)
-
-                        rating_div = cells[1].find('div', class_='ir')
-                        rating = 0.0
-                        if rating_div:
-                            x, y = HTMLParser.parse_background_position(rating_div.get('style', ''))
-                            rating = HTMLParser.calculate_rating(x, y)
-
-                        pages = HTMLParser.extract_page_count(cells[3])
-
-                        results.append({
-                            "title": title.strip(),
-                            "author": author.strip() if author else "Unknown",
-                            "category": category,
-                            "gallery_url": gallery_url,
-                            "cover_url": cover_url,
-                            "timestamp": timestamp,
-                            "rating": round(rating, 1),
-                            "pages": pages
-                        })
-                    except Exception as e:
-                        logger.warning(f"数据解析异常: {e}")
-
-        return results
-
-    @staticmethod
     def get_next_page_url(html_content: str) -> Optional[str]:
         if not html_content:
             return None
@@ -154,3 +109,48 @@ class HTMLParser:
             return [a["href"] for a in gdt_element.find_all("a", href=True)]
 
         return []
+
+    @staticmethod
+    def parse_gallery_from_html(html_content: str) -> List[Dict[str, Any]]:
+        if not html_content:
+            return []
+
+        results = []
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        if (table := soup.find('table', class_='itg')):
+            for row in table.find_all('tr')[1:]:
+                cells = row.find_all('td')
+                if len(cells) >= 4:
+                    try:
+                        category = cells[0].get_text(strip=True)
+                        gallery_url = cells[2].find('a')['href']
+                        cover_url = HTMLParser.extract_cover_url(cells[1])
+                        timestamp = HTMLParser.parse_timestamp_from_cell(cells[1])
+
+                        title_element = cells[2].find('a')
+                        raw_title = title_element.find('div', class_='glink').get_text(strip=True)
+                        author, title = HTMLParser.extract_author_and_title(raw_title)
+
+                        rating_div = cells[1].find('div', class_='ir')
+                        rating = 0.0
+                        if rating_div:
+                            x, y = HTMLParser.parse_background_position(rating_div.get('style', ''))
+                            rating = HTMLParser.calculate_rating(x, y)
+
+                        pages = HTMLParser.extract_page_count(cells[3])
+
+                        results.append({
+                            "title": title.strip(),
+                            "author": author.strip() if author else "Unknown",
+                            "category": category,
+                            "gallery_url": gallery_url,
+                            "cover_url": cover_url,
+                            "timestamp": timestamp,
+                            "rating": round(rating, 1),
+                            "pages": pages
+                        })
+                    except Exception as e:
+                        logger.warning(f"数据解析异常: {e}")
+
+        return results
