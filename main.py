@@ -11,6 +11,7 @@ import re
 import aiohttp
 import glob
 import logging
+import json
 from typing import List
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,10 @@ class EHentaiBot(BasePlugin):
         self.parser = HTMLParser()
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
+        
+        # 确保搜索缓存目录存在
+        self.search_cache_dir = Path(__file__).parent / "searchCache"
+        self.search_cache_dir.mkdir(exist_ok=True, parents=True)
 
     async def initialize(self):
         pass
@@ -99,6 +104,16 @@ class EHentaiBot(BasePlugin):
                 await ctx.reply(MessageChain(["未找到符合条件的结果"]))
                 return
                 
+            # 存储搜索结果到缓存中
+            cache_data = {}
+            for idx, result in enumerate(search_results, 1):
+                cache_data[str(idx)] = result['gallery_url']
+                
+            # 将缓存保存到以用户ID命名的JSON文件中
+            cache_file = self.search_cache_dir / f"{ctx.event.sender_id}.json"
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, ensure_ascii=False, indent=2)
+                
             output = "搜索结果:\n"
             output += "=" * 50 + "\n"
             for idx, result in enumerate(search_results, 1):
@@ -139,13 +154,33 @@ class EHentaiBot(BasePlugin):
                 await self.eh_helper(ctx)
                 return
 
+            url = args[0]
             pattern = re.compile(r'^https://(e-hentai|exhentai)\.org/g/\d{7}/[a-f0-9]{10}/$')
-            if not pattern.match(args[0]):
-                await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
-                return
+            
+            if not pattern.match(url):
+                # 检查是否是正整数
+                if url.isdigit() and int(url) > 0:
+                    # 尝试从缓存文件读取URL
+                    cache_file = self.search_cache_dir / f"{ctx.event.sender_id}.json"
+                    if cache_file.exists():
+                        with open(cache_file, 'r', encoding='utf-8') as f:
+                            cache_data = json.load(f)
+                        
+                        if url in cache_data:
+                            url = cache_data[url]
+                            await ctx.reply(MessageChain([f"从缓存获取链接: {url}"]))
+                        else:
+                            await ctx.reply(MessageChain([f"缓存中未找到序号 {url} 对应的画廊"]))
+                            return
+                    else:
+                        await ctx.reply(MessageChain([f"未找到搜索缓存，请先使用'搜eh'命令"]))
+                        return
+                else:
+                    await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
+                    return
 
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-                is_pdf_exist = await self.downloader.process_pagination(ctx, session, args[0])
+                is_pdf_exist = await self.downloader.process_pagination(ctx, session, url)
 
                 if not is_pdf_exist:
                     title = self.downloader.gallery_title
@@ -159,7 +194,7 @@ class EHentaiBot(BasePlugin):
     async def eh_helper(self, ctx: EventContext):
         help_text = """eh指令帮助：
 [1] 搜索画廊: 搜eh [关键词] [最低评分（2-5，默认2）] [最少页数（默认1）] [获取第几页的画廊列表（默认1）]
-[2] 下载画廊: 看eh [画廊链接]
+[2] 下载画廊: 看eh [画廊链接 或 搜索结果序号]
 [3] 获取指令帮助: eh
 [4] 热重载config相关参数: 重载eh配置
 
@@ -167,7 +202,9 @@ class EHentaiBot(BasePlugin):
 [1] 搜eh [关键词]
 [2] 搜eh [关键词] [最低评分]
 [3] 搜eh [关键词] [最低评分] [最少页数]
-[4] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]"""
+[4] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]
+
+下载画廊可以直接使用搜索结果前的序号，如：看eh 1"""
         await ctx.reply(MessageChain([help_text]))
 
     async def reload_config(self, ctx: EventContext):
@@ -176,4 +213,3 @@ class EHentaiBot(BasePlugin):
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
         await ctx.reply(MessageChain(["已重载配置参数"]))
-        
