@@ -90,8 +90,9 @@ request:
 ### 输出设置
 ```
 output:
-  image_folder: "/app/sharedFolder/tempImages" # 暂时存放画廊图片的文件夹路径
-  pdf_folder: "/app/sharedFolder/ehentai" # 存放 PDF 文件的路径
+  image_folder: "/app/sharedFolder/ehentai/tempImages" # 缓存画廊图片的路径
+  pdf_folder: "/app/sharedFolder/ehentai/pdf" # 存放pdf文件的路径
+  search_cache_folder: "/app/sharedFolder/ehentai/searchCache" # 缓存每个用户搜索结果的路径
   jpeg_quality: 85 # 图片质量，100 为不压缩，85 左右可以达到文件大小和质量的最佳平衡
   max_pages_per_pdf: 200 # 单个 PDF 文件最大页数
 ```
