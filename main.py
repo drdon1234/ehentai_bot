@@ -23,11 +23,10 @@ class EHentaiBot(BasePlugin):
     def __init__(self, host: APIHost):
         super().__init__(host)
         self.config = load_config()
-        self.uploader = MessageAdapter(self.config)
-        self.helpers = Helpers()
         self.parser = HTMLParser()
-        self.downloader = Downloader(self.config, self.uploader, self.parser, self.helpers)
-        self.pdf_generator = PDFGenerator(self.config, self.helpers)
+        self.uploader = MessageAdapter(self.config)
+        self.downloader = Downloader(self.config, self.uploader, self.parser)
+        self.pdf_generator = PDFGenerator(self.config)
 
     async def initialize(self):
         pass
@@ -102,9 +101,20 @@ class EHentaiBot(BasePlugin):
             if not search_results:
                 await ctx.reply(MessageChain(["未找到符合条件的结果"]))
                 return
-    
-            results_ui = self.helpers.get_search_results(search_results)
-            await ctx.reply(MessageChain([results_ui]))
+                
+            output = "搜索结果:\n"
+            output += "=" * 50 + "\n"
+            for idx, result in enumerate(results, 1):
+                output += f"[{idx}] {result['title']}\n"
+                output += (
+                    f" 作者: {result['author']} | 分类: {result['category']} | 页数: {result['pages']} | "
+                    f"评分: {result['rating']} | 上传时间: {result['timestamp']}\n"
+                )
+                output += f" 封面: {result['cover_url']}\n"
+                output += f" 画廊链接: {result['gallery_url']}\n"
+                output += "-" * 80 + "\n"
+                    
+            await ctx.reply(MessageChain([output]))
         
         except ValueError as e:
             logger.exception("参数解析失败")
