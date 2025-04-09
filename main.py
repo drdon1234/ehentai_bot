@@ -25,10 +25,6 @@ class EHentaiBot(BasePlugin):
         self.parser = HTMLParser()
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
-        
-        # 确保搜索缓存目录存在
-        self.search_cache_dir = Path(__file__).parent / "searchCache"
-        self.search_cache_dir.mkdir(exist_ok=True, parents=True)
 
     async def initialize(self):
         pass
@@ -104,13 +100,14 @@ class EHentaiBot(BasePlugin):
                 await ctx.reply(MessageChain(["未找到符合条件的结果"]))
                 return
                 
-            # 存储搜索结果到缓存中
             cache_data = {}
             for idx, result in enumerate(search_results, 1):
                 cache_data[str(idx)] = result['gallery_url']
-                
-            # 将缓存保存到以用户ID命名的JSON文件中
-            cache_file = self.search_cache_dir / f"{ctx.event.sender_id}.json"
+            
+            search_cache_folder = Path(self.config['output']['search_cache_folder'])
+            search_cache_folder.mkdir(exist_ok=True, parents=True)
+        
+            cache_file = search_cache_folder / f"{ctx.event.sender_id}.json"
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(cache_data, f, ensure_ascii=False, indent=2)
                 
@@ -138,13 +135,12 @@ class EHentaiBot(BasePlugin):
 
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         image_folder = Path(self.config['output']['image_folder'])
+        image_folder.mkdir(exist_ok=True, parents=True)
         pdf_folder = Path(self.config['output']['pdf_folder'])
-
-        if not image_folder.exists():
-            image_folder.mkdir(parents=True)
-        if not pdf_folder.exists():
-            pdf_folder.mkdir(parents=True)
-
+        pdf_folder.mkdir(exist_ok=True, parents=True)
+        search_cache_folder = Path(self.config['output']['search_cache_folder'])
+        search_cache_folder.mkdir(exist_ok=True, parents=True)
+        
         for f in glob.glob(str(Path(self.config['output']['image_folder']) / "*.*")):
             os.remove(f)
 
@@ -158,22 +154,20 @@ class EHentaiBot(BasePlugin):
             pattern = re.compile(r'^https://(e-hentai|exhentai)\.org/g/\d{7}/[a-f0-9]{10}/$')
             
             if not pattern.match(url):
-                # 检查是否是正整数
                 if url.isdigit() and int(url) > 0:
-                    # 尝试从缓存文件读取URL
-                    cache_file = self.search_cache_dir / f"{ctx.event.sender_id}.json"
+                    cache_file = search_cache_folder / f"{ctx.event.sender_id}.json"
                     if cache_file.exists():
                         with open(cache_file, 'r', encoding='utf-8') as f:
                             cache_data = json.load(f)
                         
                         if url in cache_data:
                             url = cache_data[url]
-                            await ctx.reply(MessageChain([f"从缓存获取链接: {url}"]))
+                            await ctx.reply(MessageChain([f"正在获取画廊链接: {url}"]))
                         else:
-                            await ctx.reply(MessageChain([f"缓存中未找到序号 {url} 对应的画廊"]))
+                            await ctx.reply(MessageChain([f"未找到索引为 {url} 的画廊"]))
                             return
                     else:
-                        await ctx.reply(MessageChain([f"未找到搜索缓存，请先使用'搜eh'命令"]))
+                        await ctx.reply(MessageChain([f"未找到搜索记录，请先使用'搜eh'命令"]))
                         return
                 else:
                     await ctx.reply(MessageChain([f"画廊链接异常，请重试..."]))
