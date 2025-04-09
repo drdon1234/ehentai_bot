@@ -16,7 +16,7 @@ from typing import List
 logger = logging.getLogger(__name__)
 
 
-@register(name="ehentai_bot", description="适配 LangBot 的 EHentai画廊 转 PDF 插件", version="2.0", author="drdon1234")
+@register(name="ehentai_bot", description="适配 LangBot 的 EHentai画廊 转 PDF 插件", version="2.1", author="drdon1234")
 class EHentaiBot(BasePlugin):
     def __init__(self, host: APIHost):
         super().__init__(host)
