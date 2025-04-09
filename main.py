@@ -5,7 +5,6 @@ from plugins.ehentai_bot.utils.config_manager import load_config
 from plugins.ehentai_bot.utils.downloader import Downloader
 from plugins.ehentai_bot.utils.html_parser import HTMLParser
 from plugins.ehentai_bot.utils.message_adapter import MessageAdapter
-from plugins.ehentai_bot.utils.pdf_generator import PDFGenerator
 from pathlib import Path
 import os
 import re
@@ -25,7 +24,6 @@ class EHentaiBot(BasePlugin):
         self.parser = HTMLParser()
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
-        self.pdf_generator = PDFGenerator(self.config)
 
     async def initialize(self):
         pass
@@ -151,7 +149,7 @@ class EHentaiBot(BasePlugin):
 
                 if not is_pdf_exist:
                     title = self.downloader.gallery_title
-                    await self.pdf_generator.merge_images_to_pdf(ctx, title)
+                    await self.downloader.merge_images_to_pdf(ctx, title)
                     await self.uploader.upload_file(ctx, self.config['output']['pdf_folder'], title)
                     
         except Exception as e:
@@ -177,6 +175,5 @@ class EHentaiBot(BasePlugin):
         self.config = load_config()
         self.uploader = MessageAdapter(self.config)
         self.downloader = Downloader(self.config, self.uploader, self.parser)
-        self.pdf_generator = PDFGenerator(self.config)
         await ctx.reply(MessageChain(["已重载配置参数"]))
         
