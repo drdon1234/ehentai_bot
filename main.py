@@ -3,7 +3,6 @@ from pkg.plugin.context import register, handler, BasePlugin, APIHost, EventCont
 from pkg.plugin.events import PersonNormalMessageReceived, GroupNormalMessageReceived
 from plugins.ehentai_bot.utils.config_manager import load_config
 from plugins.ehentai_bot.utils.downloader import Downloader
-from plugins.ehentai_bot.utils.helpers import Helpers
 from plugins.ehentai_bot.utils.html_parser import HTMLParser
 from plugins.ehentai_bot.utils.message_adapter import MessageAdapter
 from plugins.ehentai_bot.utils.pdf_generator import PDFGenerator
