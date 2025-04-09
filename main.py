@@ -188,7 +188,7 @@ class EHentaiBot(BasePlugin):
     async def eh_helper(self, ctx: EventContext):
         help_text = """eh指令帮助：
 [1] 搜索画廊: 搜eh [关键词] [最低评分（2-5，默认2）] [最少页数（默认1）] [获取第几页的画廊列表（默认1）]
-[2] 下载画廊: 看eh [画廊链接 或 搜索结果序号]
+[2] 下载画廊: 看eh [画廊链接/搜索结果序号]
 [3] 获取指令帮助: eh
 [4] 热重载config相关参数: 重载eh配置
 
@@ -198,7 +198,9 @@ class EHentaiBot(BasePlugin):
 [3] 搜eh [关键词] [最低评分] [最少页数]
 [4] 搜eh [关键词] [最低评分] [最少页数] [获取第几页的画廊列表]
 
-下载画廊可以直接使用搜索结果前的序号，如：看eh 1"""
+可用的下载方式：
+[1] 看eh [画廊链接]
+[2] 看eh [搜索结果序号]（确保你最近至少使用过一次"搜eh"命令）"""
         await ctx.reply(MessageChain([help_text]))
 
     async def reload_config(self, ctx: EventContext):
