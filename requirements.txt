@@ -1,11 +1,9 @@
-asyncio
 aiofiles
 aiohttp
+PyYAML
+natsort
+glob2
+python-magic
 beautifulsoup4
 img2pdf
-natsort
 Pillow
-PyYAML
-python-magic
-glob2
-pathlib
