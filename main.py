@@ -58,7 +58,6 @@ class EHentaiBot(BasePlugin):
         return [p for p in message.split(' ') if p][1:]
 
     async def search_gallery(self, ctx: EventContext, cleaned_text: str):
-
         defaults = {
             "min_rating": 2,
             "min_pages": 1,
@@ -75,9 +74,11 @@ class EHentaiBot(BasePlugin):
                 await ctx.reply(MessageChain(["参数过多，最多支持4个参数：标签 评分 页数 页码"]))
                 return
 
+            raw_tags = args[0]
             tags = re.sub(r'[，,+]+', ' ', args[0])
 
             params = defaults.copy()
+            params["tags"] = raw_tags
             param_names = ["min_rating", "min_pages", "target_page"]
 
             for i, (name, value) in enumerate(zip(param_names, args[1:]), 1):
@@ -100,7 +101,7 @@ class EHentaiBot(BasePlugin):
                 await ctx.reply(MessageChain(["未找到符合条件的结果"]))
                 return
 
-            cache_data = {}
+            cache_data = {"params": params}
             for idx, result in enumerate(search_results, 1):
                 cache_data[str(idx)] = result['gallery_url']
 
@@ -133,6 +134,42 @@ class EHentaiBot(BasePlugin):
             logger.exception("搜索失败")
             await ctx.reply(MessageChain([f"搜索失败：{str(e)}"]))
 
+    async def jump_to_page(self, ctx: EventContext, cleaned_text: str):
+        args = self.parse_command(cleaned_text)
+        if len(args) != 1:
+            await ctx.reply(MessageChain(["参数错误，翻页操作只需要一个参数（页码）"]))
+            return
+    
+        page_num = args[0]
+        if not page_num.isdigit() or int(page_num) < 1:
+            await ctx.reply(MessageChain(["页码应该是大于0的整数"]))
+            return
+    
+        search_cache_folder = Path(self.config['output']['search_cache_folder'])
+        cache_file = search_cache_folder / f"{ctx.event.sender_id}.json"
+    
+        if not cache_file.exists():
+            await ctx.reply(MessageChain(["未找到搜索记录，请先使用'搜eh'命令"]))
+            return
+    
+        with open(cache_file, 'r', encoding='utf-8') as f:
+            cache_data = json.load(f)
+    
+        if 'params' not in cache_data:
+            await ctx.reply(MessageChain(["缓存文件中缺少必要参数信息，请使用'搜eh'命令重新搜索"]))
+            return
+    
+        params = cache_data['params']
+        
+        if 'tags' not in params:
+            await ctx.reply(MessageChain(["缓存文件中未找到关键词信息，无法跳转到指定页"]))
+            return
+    
+        params['target_page'] = int(page_num)
+        cleaned_text = f"搜eh {params['tags']} {params['min_rating']} {params['min_pages']} {params['target_page']}"
+    
+        await self.search_gallery(ctx, cleaned_text)
+    
     async def download_gallery(self, ctx: EventContext, cleaned_text: str):
         image_folder = Path(self.config['output']['image_folder'])
         image_folder.mkdir(exist_ok=True, parents=True)
