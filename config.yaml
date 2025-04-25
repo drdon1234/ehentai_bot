@@ -27,6 +27,6 @@ output:
 # 注意：
 # 如果你是docker部署，请务必为消息平台容器挂载pdf文件所在的文件夹，否则消息平台将无法解析文件路径
 #
-# 我是这样做的：
+# 示例挂载方式(NapCat)：
 #   对langbot: /vol3/1000/dockerSharedFolder -> /app/sharedFolder
 #   对napcat: /vol3/1000/dockerSharedFolder -> /app/sharedFolder
