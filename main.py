@@ -41,6 +41,8 @@ class EHentaiBot(BasePlugin):
 
         if cleaned_text.startswith('搜eh'):
             await self.search_gallery(ctx, cleaned_text)
+        if cleaned_text.startswith('eh翻页'):
+            await self.jump_to_page(ctx, cleaned_text)
         elif cleaned_text.startswith('看eh'):
             await self.download_gallery(ctx, cleaned_text)
         elif cleaned_text.startswith('eh'):
